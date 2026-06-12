@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "healteam-memory"
+version = "0.1.0"
+description = "HealTeam shared memory schemas and store interfaces"
+authors = ["HealTeam <dev@healteam.local>"]
+license = "Proprietary"
+packages = [{include = "."}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+pydantic = ">=2.6,<3.0"
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"

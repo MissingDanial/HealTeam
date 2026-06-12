@@ -1,0 +1,76 @@
+# HealTeam — Docker Compose (W1)
+#
+# One-command bring-up:
+#   docker compose up
+#
+# Services:
+#   postgres  — Postgres 16 + pgvector
+#   api       — FastAPI backend
+#   web       — Next.js frontend
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: healteam-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-healteam}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-healteam}
+      POSTGRES_DB: ${POSTGRES_DB:-healteam}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - healteam_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-healteam} -d ${POSTGRES_DB:-healteam}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: healteam-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-healteam}:${POSTGRES_PASSWORD:-healteam}@postgres:5432/${POSTGRES_DB:-healteam}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.7}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-512}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2).status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: healteam-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  healteam_pgdata:
+    name: healteam_pgdata

@@ -1,0 +1,355 @@
+{
+  "case_id": "teen-truancy-01",
+  "version": "1.0.0",
+  "title": "高一男生拒学三个月：被卡住的代际边界",
+  "subtitle": "一个跨代际联盟与退行性抗议的典型案例",
+  "language": "zh-CN",
+  "archetype": "structural_minuchin_classic",
+  "family_system_pattern": "disengaged_father__enmeshed_mother_son__coalition_across_generation",
+  "summary": "父亲用理性化与工作逃避维持情感距离；母亲与儿子形成跨代际情感联盟；儿子通过躯体化与退行表达对'被卡在父母中间'的隐性抗议。家庭表面上'父母联盟对抗孩子'，实际动力是'父母联盟早已破裂，孩子被母亲拉为情感代偿'。",
+  "presenting_problem": "高一男生拒学 3 个月，与父母冲突频繁",
+  "duration_weeks": 12,
+  "tier": "primary_mvp",
+
+  "family": {
+    "father": {
+      "name": "林建国",
+      "age": 48,
+      "gender": "male",
+      "occupation": "结构工程师（某国有设计院）",
+      "education": "本科（农村出身，家中第一个大学生）",
+      "trait": "控制型、理性化、问题解决导向",
+      "defense_pattern": [
+        {
+          "name": "合理化",
+          "description": "用'我同事家孩子'对比来合理化自己的控制期望",
+          "example_utterance": "我同事家孩子中考全市第一，最后考上了清华。我们对他要求不算高啊。",
+          "underlying_fear": "承认儿子'普通'等于承认自己的教育投资失败"
+        },
+        {
+          "name": "理性化取代情感表达",
+          "description": "把情绪问题翻译成'应不应该'的逻辑问题",
+          "example_utterance": "哭什么哭，遇到问题就解决，哭能解决问题吗？",
+          "underlying_fear": "承认自己有情绪 = 失控 = 像自己的父亲"
+        },
+        {
+          "name": "投射",
+          "description": "把家庭冲突归因为'都是他妈惯的'",
+          "example_utterance": "他这个年纪的问题，归根结底都是他妈惯出来的。",
+          "underlying_fear": "面对自己在儿子成长中的情感缺位"
+        },
+        {
+          "name": "工作补偿",
+          "description": "用加班/出差回避家庭情感议题",
+          "example_utterance": "我天天加班不就是为了这个家吗？你们还要我怎样？",
+          "underlying_fear": "家庭情感议题超出自己的应对能力"
+        },
+        {
+          "name": "原生家庭话题回避",
+          "description": "坚决拒绝谈论自己父亲的严格管教",
+          "example_utterance": "过去的事就不要提了，跟现在有什么关系。",
+          "underlying_fear": "承认自己正在重复父亲的模式"
+        }
+      ],
+      "origin_family_note": "林建国父亲为乡村教师，对子女要求严苛，体罚常见。林建国高中三年未与父亲说过一句'心里话'。他立志'绝不像父亲'，但行为模式上呈现高度相似——这是典型的代际传递。",
+      "emotional_register": "外显低情感、内隐高张力；只在被直接追问原生家庭时出现微表情的防御"
+    },
+    "mother": {
+      "name": "王秀英",
+      "age": 45,
+      "gender": "female",
+      "occupation": "初中语文教师（重点中学）",
+      "education": "本科（城市出身，独生女）",
+      "trait": "焦虑型、过度保护、情感化表达",
+      "defense_pattern": [
+        {
+          "name": "过度保护与替孩子发声",
+          "description": "在儿子还没开口前就替他解释、替他拒绝",
+          "example_utterance": "（对医生）他就是胃不舒服，去了医院也没查出什么……他不是不想学，他是身体撑不住。",
+          "underlying_fear": "儿子被责备 = 自己也失败了"
+        },
+        {
+          "name": "情感化应对",
+          "description": "用眼泪和自责打断冲突",
+          "example_utterance": "（开始哭）都是我没用，如果当初我没让他上这个学校……",
+          "underlying_fear": "家庭冲突被定义为'母亲的失职'"
+        },
+        {
+          "name": "跨代际隐性联盟",
+          "description": "与儿子形成'我们 vs 他爸'的隐性阵营",
+          "example_utterance": "（小声对儿子）你爸脾气你知道的，咱们先不跟他争。",
+          "underlying_fear": "失去儿子 = 失去自己最重要的情感关系"
+        },
+        {
+          "name": "教师角色入侵家庭",
+          "description": "用'教育'姿态与儿子沟通，但儿子不吃这一套",
+          "example_utterance": "（用讲课时语气）子轩你听妈说，妈是老师，妈理解你。",
+          "underlying_fear": "承认自己在家庭里不再是'老师'角色也无效"
+        },
+        {
+          "name": "替罪羊机制",
+          "description": "把'儿子不上学'归因为'学校/丈夫/当初的选择'",
+          "example_utterance": "要是当初去了 XX 中学就好了，那边压力小。",
+          "underlying_fear": "面对自己也是儿子拒学'共谋者'的事实"
+        }
+      ],
+      "origin_family_note": "王秀英父母为双职工，从小被严格'不许哭、不许输'。她承诺自己要给孩子'有温度的童年'，但在与丈夫的冲突中无意识重复了父母的情感剥夺模式——用焦虑替代陪伴。",
+      "emotional_register": "外显高情感、内隐高控制；'我为你好'的高频表达"
+    },
+    "patient": {
+      "name": "林子轩",
+      "age": 16,
+      "gender": "male",
+      "occupation": "高一在读（重点中学重点班，开学 3 个月已累计缺勤 47 天）",
+      "education": "初中成绩年级前 20%，以全市排名进入现高中",
+      "trait": "回避、退行、被动攻击",
+      "defense_pattern": [
+        {
+          "name": "躯体化",
+          "description": "拒学以'肚子疼/头疼'为前兆，医院反复检查无器质性问题",
+          "example_utterance": "（蜷在沙发上）我真去不了，肚子又疼了。",
+          "underlying_fear": "直接说'我不想去' = 父母崩溃 = 自己是坏人"
+        },
+        {
+          "name": "退行",
+          "description": "拒绝承担 16 岁应有的自我管理责任",
+          "example_utterance": "你们给我弄好不就行了？我现在什么都不想管。",
+          "underlying_fear": "承担 = 失败 = 让父母失望"
+        },
+        {
+          "name": "回避",
+          "description": "用关门、戴耳机、玩手机建立物理屏障",
+          "example_utterance": "（对母亲）我说了我没事，你们别烦我行吗？",
+          "underlying_fear": "被看见真实情绪 = 暴露 = 失控"
+        },
+        {
+          "name": "被动攻击",
+          "description": "表面顺从、暗中不执行",
+          "example_utterance": "（敷衍）好好好，我学，行了吧？",
+          "underlying_fear": "直接反抗会引爆父亲，所以用消极抵抗"
+        },
+        {
+          "name": "分裂",
+          "description": "在父亲面前沉默寡言，在母亲面前哭诉",
+          "example_utterance": "（对母亲）妈，我真的好累……（对父亲时）嗯。",
+          "underlying_fear": "如果对父亲也表达脆弱，会被嘲笑或责备"
+        }
+      ],
+      "school_context_note": "进入重点班后，成绩从初中前 20% 跌到班级中下游。第一次月考后开始拒学。班主任评价'聪明但学习动力几乎为零'。",
+      "emotional_register": "外显低能量、内隐高警觉；只有在母亲身边才敢表达情绪"
+    }
+  },
+
+  "family_pattern": {
+    "structural_analysis": {
+      "subsystems": {
+        "marital_subsystem": "父母联盟名义上存在，实质上已经破裂——两人在'如何管教儿子'上的分歧掩盖了更深的'夫妻情感疏离'。",
+        "parental_subsystem": "父母共同承担养育责任的子系统已让位于'母亲单打独斗+父亲缺席'的格局。",
+        "parent_child_subsystem": "代际边界模糊：母亲-儿子之间形成'情感代偿'关系，替代了母亲本应从丈夫那里获得的情感支持。",
+        "sibling_subsystem": "无（独生子女家庭，但儿子的'心理位置'承担了'父母情感调解人'的功能）"
+      },
+      "boundaries": {
+        "father_mother": {
+          "type": "rigid",
+          "description": "情感上几乎不直接沟通，所有对话都通过'儿子的问题'作为媒介。"
+        },
+        "mother_patient": {
+          "type": "diffuse_enmeshed",
+          "description": "情感过度卷入，母亲把儿子的情绪当作自己的情绪，儿子把母亲当作唯一的安全港。"
+        },
+        "father_patient": {
+          "type": "rigid_disengaged",
+          "description": "互动模式是'批评-沉默'循环；父亲不知道如何与儿子进行非评价性对话。"
+        }
+      },
+      "triangles": [
+        "经典三角：夫妻冲突 → 拉儿子入局 → 儿子症状化。表面看是'孩子问题'，本质是'夫妻问题'。",
+        "代际三角：母亲-儿子联盟 vs 父亲，把父亲从情感关系中排挤出去。"
+      ]
+    },
+    "bowen_analysis": {
+      "differentiation_of_self": {
+        "father": "低分化（功能型，伪装成高分化）——在专业领域有独立判断，但家庭情感议题上完全被情绪淹没。",
+        "mother": "中低分化——表面情感丰富，但所有情感反应都依赖'儿子的状态'作为触发器。",
+        "patient": "尚未完成分化任务，16 岁仍处于'核心情感自我'未与'父母期待自我'分离的阶段。"
+      },
+      "family_projection_process": "母亲把'自己不能接受的部分'（对失败的恐惧、对丈夫的失望）通过'过度关注儿子'传递给儿子；儿子通过拒学'完成'母亲未说出口的抗议。",
+      "multigenerational_transmission": "林建国的'情感表达 = 软弱'认知来自他的父亲；他把这条规则通过'你看你动不动就哭'传递给儿子。",
+      "triangulation": "夫妻冲突被三角化为'儿子问题'；拉儿子进入'裁判'位置本身就是症状。",
+      "sibling_position": "无同胞，但儿子在心理位置上承担'调停者/代罪羊'。"
+    },
+    "satir_analysis": {
+      "communication_stances": {
+        "father_default": "computer（超理性电脑型）：'数据显示你应该这样做。'",
+        "mother_default": "placator（讨好型）：'都是妈不好，你别生气了。'",
+        "patient_default": "irrelevant（打岔型→混合型）：'我没事，我挺好。'逃避真实表达。"
+      },
+      "family_life_process_disruption": "家庭的'自我价值感'通道被'儿子成绩'占据；当成绩塌方，全家自我价值感塌方。",
+      "iceberg_dynamics": "表层事件（拒学）下，是'我不够好 / 我不被爱 / 我会让父母失望'的深层信念。",
+      "congruence_level": "全家人都处于低一致性沟通状态——言行不一致，情感表达被翻译为指责/讨好/回避。"
+    }
+  },
+
+  "treatment_focus": [
+    {
+      "id": "TF1",
+      "title": "重建代际边界：让儿子回归'儿子'的位置",
+      "description": "把'父母的情感议题'从儿子身上卸下，让儿子不再承担'照顾母亲情绪'或'回应父亲期待'的角色功能。",
+      "primary_school_affinity": ["structural", "bowen"]
+    },
+    {
+      "id": "TF2",
+      "title": "激活父母联盟：让夫妻关系重新成为家庭主轴",
+      "description": "直接处理夫妻情感疏离；让父母在治疗室里有'作为夫妻'的对话，而不只是'作为父母'的对话。",
+      "primary_school_affinity": ["structural", "bowen"]
+    },
+    {
+      "id": "TF3",
+      "title": "松动父亲的情感表达：从'解决问题'到'情感可见'",
+      "description": "帮助父亲识别'我的情绪也存在'，并发展出'不带评价地看见儿子'的能力。",
+      "primary_school_affinity": ["structural", "satir"]
+    },
+    {
+      "id": "TF4",
+      "title": "让母亲的保护有节制：支持儿子的自主性",
+      "description": "帮助母亲识别'我替儿子说话'的瞬间，区分'支持'与'替代'。",
+      "primary_school_affinity": ["satir", "bowen"]
+    },
+    {
+      "id": "TF5",
+      "title": "命名沉默：让儿子直接表达，而不是用躯体说话",
+      "description": "提供安全的表达空间，让拒学的'症状语言'被翻译为'情感语言'。",
+      "primary_school_affinity": ["satir", "structural"]
+    }
+  ],
+
+  "opening_context": {
+    "session_round_0_scene": "父母带儿子第三次进入治疗室。儿子低头玩手机，耳机只摘下一只。父亲坐在角落单人沙发，双臂交叉，眉头紧锁。母亲坐在儿子旁边，时不时看儿子一眼。三人之间的物理距离：父母相距最远（隔着茶几对坐），母亲和儿子距离最近（母亲坐的椅子几乎贴着儿子）。",
+    "atmospheric_cues": [
+      "空气沉默 30 秒没人主动说话",
+      "母亲先开口：'医生您看，我们又来了……他今天在家又跟我吵了一架。'",
+      "父亲在母亲说话时翻了个白眼，但没出声",
+      "儿子始终没抬头，戴着耳机",
+      "这是儿子第一次在治疗中摘下耳机（在前两轮由父母单独进行的'父母访谈'之后）"
+    ],
+    "doctor_first_utterance_direction": "不直接问'你为什么不上学'（这会强化儿子的回避）。不直接问'你们为什么管不好'（这会强化父母的防御）。建议使用'此时此地'技术——描述这个房间里的画面，邀请家庭成员回应。",
+    "emotional_state": {
+      "father": "防御性在场（defensive present）",
+      "mother": "焦虑的求助者（anxious helper）",
+      "patient": "被动抗拒（passive resistance）"
+    }
+  },
+
+  "expected_milestones": [
+    {
+      "id": "M1",
+      "label": "父亲能说出一句不带评价的、关于儿子的具体观察",
+      "expected_window_rounds": "3~6",
+      "validation_signal": "父亲从'你就是不上进'转向'我注意到你最近睡觉越来越晚'",
+      "primary_school": ["structural", "satir"]
+    },
+    {
+      "id": "M2",
+      "label": "母亲能识别自己'代替儿子说话'的瞬间",
+      "expected_window_rounds": "5~8",
+      "validation_signal": "母亲在被指认后说'我刚才是不是又替子轩说了？'",
+      "primary_school": ["structural", "satir"]
+    },
+    {
+      "id": "M3",
+      "label": "儿子能直接对父母说一句'我真实想说的话'（不是抱怨、不是躯体化）",
+      "expected_window_rounds": "8~12",
+      "validation_signal": "儿子摘下耳机，说'我其实……'，并完成一个完整的情感句",
+      "primary_school": ["satir", "structural"]
+    },
+    {
+      "id": "M4",
+      "label": "父母能就'下周儿子在家谁负责'达成一个具体共识",
+      "expected_window_rounds": "12~16",
+      "validation_signal": "父母两人在治疗室里直接对话（不通过儿子），并说出一个可执行的家庭协议",
+      "primary_school": ["structural", "bowen"]
+    },
+    {
+      "id": "M5",
+      "label": "家庭能识别自己的'代际传递'——林建国看见自己与父亲的相似",
+      "expected_window_rounds": "16~20",
+      "validation_signal": "父亲说'我父亲当年也是这么对我的'，并流露出真实情绪",
+      "primary_school": ["bowen", "satir"]
+    }
+  ],
+
+  "school_affinity": {
+    "structural": {
+      "suitability": "high",
+      "rationale": "案例的代际边界、跨代际联盟、三角关系都是结构派的核心工作对象。重构边界（enactment）技术可以高强度使用。",
+      "key_techniques_to_apply": ["joining", "boundary_marking", "enactment", "reframing", "tracking_sequence"]
+    },
+    "bowen": {
+      "suitability": "high",
+      "rationale": "案例的代际传递、自我分化、夫妻三角关系都是 Bowen 理论的核心议题。家谱图（genogram）可作为开场工具。",
+      "key_techniques_to_apply": ["genogram", "circular_question", "differentiation", "triangulation_uncovering", "I_position"]
+    },
+    "satir": {
+      "suitability": "high",
+      "rationale": "全家处于低一致性沟通状态；冰山模型可以解构'拒学'下的情感/渴望/自我。沟通姿态转化是直接治疗点。",
+      "key_techniques_to_apply": ["iceberg_exploration", "communication_stance_mirror", "parts_party", "family_life_process_remap", "congruence_practice"]
+    }
+  },
+
+  "clinical_notes": {
+    "diagnosis_considerations": [
+      "暂未达到 DSM-5-TR 任何特定障碍的完整诊断标准；呈现为'适应问题伴学业回避'（Adjustment Disorder with mixed disturbance of emotions and conduct, F43.25 的部分特征）。",
+      "需排除：广泛性焦虑障碍、重性抑郁障碍、社交焦虑障碍。建议在治疗前 3 次访谈中完成筛查。",
+      "躯体化症状需在医学上排除（已部分完成）。"
+    ],
+    "contraindications": [
+      "如果儿子出现自伤/自杀意念，需立即升级为个体危机干预并转介。",
+      "如果家庭暴力（父母间或父母对儿子）存在，需先做安全评估。",
+      "如果父母拒绝参与或坚持把治疗变成'修理孩子'，需重新协商治疗目标。"
+    ],
+    "supervision_focus_areas": [
+      "学员是否被父亲的高压或母亲的眼泪拉入'共同反移情'",
+      "学员是否过早站边（站父母/站孩子）",
+      "学员是否回避了'夫妻关系'这一核心议题",
+      "学员能否承受家庭动力被打破后的短期症状恶化"
+    ],
+    "references": [
+      "Minuchin, S. (1974). Families and Family Therapy. Harvard University Press.",
+      "Minuchin, S., & Fishman, H. C. (1981). Family Therapy Techniques. Harvard University Press.",
+      "Bowen, M. (1978). Family Therapy in Clinical Practice. Jason Aronson.",
+      "Kerr, M. E., & Bowen, M. (1988). Family Evaluation: An Approach Based on Bowen Theory. W. W. Norton.",
+      "Satir, V. (1972). Peoplemaking. Science and Behavior Books.",
+      "Satir, V., & Baldwin, M. (1983). Satir Step by Step: A Guide to Creating Change in Families. Science and Behavior Books.",
+      "Banmen, J. (2002). The Satir Model: Family Therapy and Beyond. Science and Behavior Books.",
+      "Goldenberg, H., & Goldenberg, I. (2017). Family Therapy: An Overview (9th ed.). Cengage Learning.",
+      "Nichols, M. P. (2017). Family Therapy: Concepts and Methods (11th ed.). Pearson."
+    ]
+  },
+
+  "agent_role_hints": {
+    "father_agent": {
+      "speaking_style": "短句、逻辑化、偶尔夹杂工程术语；被追问情感时语速变快、声音变小。",
+      "first_3_utterances_draft": [
+        "（开场时）医生，我们家这个情况，主要是子轩的态度问题。",
+        "（被问到自己时）我？我没什么问题，我就是个搞技术的。",
+        "（被问到自己父亲时）我父亲……（停顿）我爸那个年代的人，不懂教育，我已经比他好多了。"
+      ]
+    },
+    "mother_agent": {
+      "speaking_style": "长句、情感词密集、经常说'你知道的'寻求共情；被打断时会突然沉默并眼眶泛红。",
+      "first_3_utterances_draft": [
+        "（开场时）医生您看，他今天又跟我在家吵了一架，他爸就只会吼他……",
+        "（被问到自己时）我？我就是担心他，他是我身上掉下来的肉啊。",
+        "（被问到自己父母时）我妈对我挺严的，但……（哭）我不想像她那样对他，所以我尽量……"
+      ]
+    },
+    "patient_agent": {
+      "speaking_style": "极简、用'嗯''还好''不知道'打发；只有在母亲开口后才开始用词稍多；绝不会主动看医生。",
+      "first_3_utterances_draft": [
+        "（开场时只点头或摇头）",
+        "（被直接问时）……不知道。",
+        "（在母亲替他说完后）……她说完了吗？我没什么要补充的。"
+      ]
+    }
+  }
+}

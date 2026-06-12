@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "healteam-api"
+version = "0.1.0"
+description = "HealTeam — Family Therapy AI Simulator (FastAPI backend)"
+authors = ["HealTeam <dev@healteam.local>"]
+license = "Proprietary"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = ">=0.110,<1.0"
+uvicorn = {extras = ["standard"], version = ">=0.27,<1.0"}
+pydantic = ">=2.6,<3.0"
+pydantic-settings = ">=2.2,<3.0"
+python-multipart = ">=0.0.9,<1.0"
+websockets = ">=12.0,<14.0"
+langgraph = ">=0.2,<1.0"
+langchain-core = ">=0.3,<1.0"
+
+# Local package dependencies (the orchestrator + memory schemas).
+healteam-memory = {path = "../../packages/memory", develop = true}
+healteam-agents = {path = "../../packages/agents", develop = true}
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0,<9.0"
+pytest-asyncio = ">=0.23,<1.0"
+ruff = ">=0.4,<1.0"
+mypy = ">=1.10,<2.0"
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "ASYNC"]
+ignore = ["E501"]  # handled by formatter
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

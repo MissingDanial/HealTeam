@@ -1,0 +1,1 @@
+"""HealTeam FastAPI backend package."""
