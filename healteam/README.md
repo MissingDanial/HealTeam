@@ -2,7 +2,7 @@
 
 > **家庭治疗 AI 陪练系统** — 5 个 AI Agent 协作，让心理学学员低成本、高保真地练习家庭治疗干预技能。
 >
-> **W1 状态**：架构骨架 + 内容资产已落盘，**77 个 pytest 全过**，demo 不崩。
+> **当前状态**：架构骨架、内容资产与基础联调能力已落盘，**82 个 pytest 全过**。
 > 但**真实行为**（家庭参与、LLM 调用、旁路提示、督导会）**在 W2**。详见 [`docs/w1-integration-report.md`](./docs/w1-integration-report.md) §0 修订说明。
 
 See [`docs/architecture.md`](./docs/architecture.md) for the full architecture, contracts, and decision log.
@@ -149,4 +149,4 @@ in `packages/agents/orchestrator.py` is immediately visible to the API.
 
 ## License
 
-Proprietary — internal MVP. See `LICENSE` (TBD).
+MIT. See [`../LICENSE`](../LICENSE).

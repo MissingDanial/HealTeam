@@ -33,6 +33,7 @@ Thumbs.db
 # Local tooling
 .opencode/
 .mavis/
+debug.log
 
 # Project-generated reports
 healteam/data/reports/*.md

@@ -6,31 +6,17 @@ Then open http://localhost:8000 in your browser.
 
 from __future__ import annotations
 
-import importlib.util
 import sys
 import webbrowser
 from pathlib import Path
 
-# Register packages (same as test_mimo.py).
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PACKAGES_DIR = REPO_ROOT / "packages"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
+from repo_bootstrap import bootstrap_local_packages
 
-def _register_package(alias: str, pkg_dir: Path) -> None:
-    if not (pkg_dir / "__init__.py").exists():
-        raise FileNotFoundError(f"{pkg_dir}/__init__.py missing")
-    spec = importlib.util.spec_from_file_location(
-        alias, pkg_dir / "__init__.py", submodule_search_locations=[str(pkg_dir)]
-    )
-    if spec is None or spec.loader is None:
-        raise ImportError(f"could not build spec for {alias} at {pkg_dir}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[alias] = module
-    spec.loader.exec_module(module)
-
-
-_register_package("healteam_memory", PACKAGES_DIR / "memory")
-_register_package("healteam_agents", PACKAGES_DIR / "agents")
+bootstrap_local_packages(REPO_ROOT)
 
 # Add apps/api to path so uvicorn can find the app.
 sys.path.insert(0, str(REPO_ROOT / "apps" / "api"))

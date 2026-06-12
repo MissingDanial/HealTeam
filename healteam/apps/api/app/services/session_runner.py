@@ -14,28 +14,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
 
-# Register packages.
 REPO_ROOT = Path(__file__).resolve().parents[4]
-PACKAGES_DIR = REPO_ROOT / "packages"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-import importlib.util
+from repo_bootstrap import bootstrap_local_packages
 
-def _register_package(alias: str, pkg_dir: Path) -> None:
-    if alias in sys.modules:
-        return
-    if not (pkg_dir / "__init__.py").exists():
-        return
-    spec = importlib.util.spec_from_file_location(
-        alias, pkg_dir / "__init__.py", submodule_search_locations=[str(pkg_dir)]
-    )
-    if spec is None or spec.loader is None:
-        return
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[alias] = module
-    spec.loader.exec_module(module)
-
-_register_package("healteam_memory", PACKAGES_DIR / "memory")
-_register_package("healteam_agents", PACKAGES_DIR / "agents")
+bootstrap_local_packages(REPO_ROOT, strict=False)
 
 import anthropic
 from healteam_memory import Actor, School, Session
