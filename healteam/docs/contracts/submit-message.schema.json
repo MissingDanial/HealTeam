@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "client_message_id": {
+      "format": "uuid",
+      "title": "Client Message Id",
+      "type": "string"
+    },
+    "expected_turn": {
+      "maximum": 30,
+      "minimum": 1,
+      "title": "Expected Turn",
+      "type": "integer"
+    },
+    "content": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Content",
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_message_id",
+    "expected_turn",
+    "content"
+  ],
+  "title": "SubmitMessageCommand",
+  "type": "object"
+}

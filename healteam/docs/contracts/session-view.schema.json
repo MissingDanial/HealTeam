@@ -1,0 +1,357 @@
+{
+  "$defs": {
+    "Actor": {
+      "description": "Who emitted an event or who is allowed to speak.\n\nNote: `trainee` is the human learner playing the therapist role.",
+      "enum": [
+        "doctor",
+        "psychiatrist",
+        "observer",
+        "father",
+        "mother",
+        "patient",
+        "trainee",
+        "system"
+      ],
+      "title": "Actor",
+      "type": "string"
+    },
+    "EventEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "format": "uuid",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "session_id": {
+          "format": "uuid",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "seq": {
+          "minimum": 1,
+          "title": "Seq",
+          "type": "integer"
+        },
+        "round": {
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Round",
+          "type": "integer"
+        },
+        "type": {
+          "$ref": "#/$defs/StreamEventType"
+        },
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "source": {
+          "$ref": "#/$defs/EventSource"
+        },
+        "visibility": {
+          "$ref": "#/$defs/EventVisibility"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "session_id",
+        "seq",
+        "round",
+        "type",
+        "actor",
+        "source",
+        "visibility",
+        "payload"
+      ],
+      "title": "EventEnvelope",
+      "type": "object"
+    },
+    "EventSource": {
+      "enum": [
+        "human",
+        "ai",
+        "system"
+      ],
+      "title": "EventSource",
+      "type": "string"
+    },
+    "EventVisibility": {
+      "enum": [
+        "public",
+        "learner",
+        "supervisor",
+        "internal"
+      ],
+      "title": "EventVisibility",
+      "type": "string"
+    },
+    "ModelMode": {
+      "enum": [
+        "mock",
+        "live"
+      ],
+      "title": "ModelMode",
+      "type": "string"
+    },
+    "ReportState": {
+      "enum": [
+        "not_started",
+        "generating",
+        "ready",
+        "failed",
+        "cancelled"
+      ],
+      "title": "ReportState",
+      "type": "string"
+    },
+    "School": {
+      "description": "Therapeutic school (流派). Locked at session start.",
+      "enum": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "School",
+      "type": "string"
+    },
+    "SessionMode": {
+      "enum": [
+        "training",
+        "demo"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    },
+    "SessionPhase": {
+      "enum": [
+        "simulation",
+        "supervision",
+        "report"
+      ],
+      "title": "SessionPhase",
+      "type": "string"
+    },
+    "SessionState": {
+      "enum": [
+        "created",
+        "awaiting_input",
+        "running",
+        "cancelling",
+        "completed",
+        "cancelled",
+        "failed",
+        "interrupted"
+      ],
+      "title": "SessionState",
+      "type": "string"
+    },
+    "StreamEventType": {
+      "enum": [
+        "status_changed",
+        "utterance",
+        "hint",
+        "report_ready",
+        "error",
+        "model_call_started",
+        "model_call_finished"
+      ],
+      "title": "StreamEventType",
+      "type": "string"
+    },
+    "UsageSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "requests": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Requests",
+          "type": "integer"
+        },
+        "input_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "unknown_requests": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Unknown Requests",
+          "type": "integer"
+        },
+        "reserved_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reserved Tokens",
+          "type": "integer"
+        },
+        "max_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Calls",
+          "type": "integer"
+        },
+        "token_budget": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Token Budget",
+          "type": "integer"
+        }
+      },
+      "title": "UsageSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "session_id": {
+      "format": "uuid",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "case_id": {
+      "maxLength": 128,
+      "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "case_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Case Version",
+      "type": "string"
+    },
+    "school": {
+      "$ref": "#/$defs/School",
+      "default": "structural"
+    },
+    "mode": {
+      "$ref": "#/$defs/SessionMode",
+      "default": "training"
+    },
+    "model_mode": {
+      "$ref": "#/$defs/ModelMode",
+      "default": "mock"
+    },
+    "state": {
+      "$ref": "#/$defs/SessionState",
+      "default": "created"
+    },
+    "phase": {
+      "$ref": "#/$defs/SessionPhase",
+      "default": "simulation"
+    },
+    "max_rounds": {
+      "default": 10,
+      "maximum": 30,
+      "minimum": 1,
+      "title": "Max Rounds",
+      "type": "integer"
+    },
+    "current_round": {
+      "default": 0,
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Current Round",
+      "type": "integer"
+    },
+    "last_event_seq": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Last Event Seq",
+      "type": "integer"
+    },
+    "report_state": {
+      "$ref": "#/$defs/ReportState",
+      "default": "not_started"
+    },
+    "completed_rounds": {
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Completed Rounds",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "provider": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "usage": {
+      "$ref": "#/$defs/UsageSummary"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/EventEnvelope"
+      },
+      "title": "Events",
+      "type": "array"
+    }
+  },
+  "required": [
+    "session_id",
+    "case_id",
+    "case_version",
+    "completed_rounds",
+    "created_at",
+    "updated_at",
+    "events"
+  ],
+  "title": "SessionView",
+  "type": "object"
+}

@@ -1,0 +1,142 @@
+{
+  "stage": "S5 local delivery and operations",
+  "version": "0.6.0",
+  "contract_version": "0.5.0",
+  "database_schema_version": 2,
+  "verified_on": "2026-11-10",
+  "timezone": "Asia/Shanghai",
+  "platform": "Windows x64",
+  "python": "3.12.13",
+  "node_major": 24,
+  "pytest": {
+    "passed": 588,
+    "failed": 0,
+    "skipped": 3,
+    "warnings": 1,
+    "method": "full suite plus complete local launcher recheck after port-preflight and atomic-state fixes; deduplicated by test ID",
+    "full_suite_before_fix": {
+      "passed": 582,
+      "failed": 1,
+      "skipped": 3,
+      "failure": "port-conflict CLI exceeded 20 seconds before loading-order fix"
+    },
+    "launcher_recheck": {
+      "passed": 33,
+      "failed": 0,
+      "skipped": 1
+    },
+    "groups": {
+      "api": 74,
+      "cases": 74,
+      "contracts": 30,
+      "evaluation": 13,
+      "integration": 24,
+      "memory": 79,
+      "operations": 106,
+      "prompts": 36,
+      "providers": 59,
+      "reliability": 5,
+      "training": 88
+    },
+    "skip_reasons": [
+      "POSIX fork ownership check",
+      "directory symlink/junction creation unavailable",
+      "junction creation unavailable"
+    ]
+  },
+  "browser": {
+    "status": "passed",
+    "core_scenarios": [
+      "homepage_defaults_and_case_configuration",
+      "human_therapist_turn_and_no_ai_doctor",
+      "refresh_and_native_sse_reconnect_without_duplicates",
+      "conflict_keeps_draft_and_retries_with_fresh_turn",
+      "saved_report_refresh_and_history_reopen",
+      "active_session_continuation_and_cancel",
+      "automatic_demo_uses_same_durable_protocol",
+      "mobile_composer_and_early_finish"
+    ],
+    "page_errors": []
+  },
+  "local_delivery_workflows": {
+    "status": "passed",
+    "checks": [
+      "managed_production_frontend_8_browser_stories",
+      "managed_training_and_human_review_saved",
+      "runtime_unchanged_after_browser_and_clean_stop",
+      "extracted_runtime_cross_cwd_relative_database_and_resources",
+      "backup_restore_preserves_report_review_and_receipt_replay",
+      "extracted_runtime_restored_report_opens_in_browser",
+      "extracted_runtime_stays_valid_after_dynamic_page_and_restart"
+    ],
+    "source_and_relocated_starts": 3,
+    "relocated_path_has_spaces_and_chinese": true,
+    "restored_reports_reviews_and_receipt_replays": "unchanged"
+  },
+  "post_fix_relocated_browser_smoke": {
+    "status": "passed",
+    "external_paid_model_calls": 0,
+    "owned_services_stopped": true,
+    "updated_launcher_sha256": "8955c82d02af451c6e370c3415b77bf3d960211eeb7760fa4dc6aba25e0f50a3",
+    "checks": [
+      "updated_launcher_runs_in_relocated_copy",
+      "relative_database_and_local_assets",
+      "restored_report_and_review_reopen",
+      "browser_no_page_errors",
+      "clean_stop_and_runtime_manifest_still_valid"
+    ]
+  },
+  "frontend": {
+    "production_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "runtime_hashed_files": 1512,
+    "runtime_manifest_format": "healteam-local-runtime-v1",
+    "runtime_prepared_at": "2026-11-04T17:29:41.916381+00:00",
+    "runtime_reverified_on": "2026-11-10",
+    "api_internal_url": "http://127.0.0.1:18000",
+    "disk_route_cache_disabled": true
+  },
+  "modified_python_ruff": "passed",
+  "offline_smoke": "passed",
+  "contract_export_check": "passed",
+  "packaging": {
+    "wheel_build": "passed",
+    "clean_installed_wheel_import": "passed",
+    "dependency_checks": "passed",
+    "runtime_environment_packages": 55,
+    "development_environment_packages": 72,
+    "source_resource_manifest": "passed",
+    "source_extracted_smoke": "passed",
+    "local_runtime_archive_manifest": "passed",
+    "zip_integrity": "passed",
+    "private_configuration_database_and_backups_excluded": "passed",
+    "actual_private_key_excluded": "passed",
+    "artifacts": [
+      "HealTeam-S5-2026-11-10.zip",
+      "HealTeam-local-0.6.0-win32-x64.zip"
+    ],
+    "sha256_sidecars": true
+  },
+  "private_configuration": "retained only in workspace .env; not included in archives",
+  "external_paid_model_calls_this_stage": 0,
+  "training_or_review_data_sent_externally": false,
+  "owned_services_stopped": true,
+  "docker": "configuration reviewed; no installed Docker to build or run",
+  "evaluation_validity": {
+    "real_expert_annotations": 0,
+    "rubric_status": "trial_unvalidated",
+    "calibration_status": "awaiting_expert_calibration"
+  },
+  "not_verified": [
+    "native directory symlink/junction rejection on current host",
+    "Python 3.11 runtime",
+    "Node 22 source rebuild",
+    "POSIX replacement branch",
+    "Docker build/runtime",
+    "real expert calibration and teaching validity",
+    "paid provider multi-round quality",
+    "multi-user access control",
+    "long-duration stress"
+  ]
+}

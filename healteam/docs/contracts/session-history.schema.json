@@ -1,0 +1,265 @@
+{
+  "$defs": {
+    "ModelMode": {
+      "enum": [
+        "mock",
+        "live"
+      ],
+      "title": "ModelMode",
+      "type": "string"
+    },
+    "ReportState": {
+      "enum": [
+        "not_started",
+        "generating",
+        "ready",
+        "failed",
+        "cancelled"
+      ],
+      "title": "ReportState",
+      "type": "string"
+    },
+    "School": {
+      "description": "Therapeutic school (流派). Locked at session start.",
+      "enum": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "School",
+      "type": "string"
+    },
+    "SessionMode": {
+      "enum": [
+        "training",
+        "demo"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    },
+    "SessionPhase": {
+      "enum": [
+        "simulation",
+        "supervision",
+        "report"
+      ],
+      "title": "SessionPhase",
+      "type": "string"
+    },
+    "SessionState": {
+      "enum": [
+        "created",
+        "awaiting_input",
+        "running",
+        "cancelling",
+        "completed",
+        "cancelled",
+        "failed",
+        "interrupted"
+      ],
+      "title": "SessionState",
+      "type": "string"
+    },
+    "SessionSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "format": "uuid",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "case_id": {
+          "maxLength": 128,
+          "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "case_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Case Version",
+          "type": "string"
+        },
+        "school": {
+          "$ref": "#/$defs/School",
+          "default": "structural"
+        },
+        "mode": {
+          "$ref": "#/$defs/SessionMode",
+          "default": "training"
+        },
+        "model_mode": {
+          "$ref": "#/$defs/ModelMode",
+          "default": "mock"
+        },
+        "state": {
+          "$ref": "#/$defs/SessionState",
+          "default": "created"
+        },
+        "phase": {
+          "$ref": "#/$defs/SessionPhase",
+          "default": "simulation"
+        },
+        "max_rounds": {
+          "default": 10,
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Max Rounds",
+          "type": "integer"
+        },
+        "current_round": {
+          "default": 0,
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Current Round",
+          "type": "integer"
+        },
+        "last_event_seq": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Last Event Seq",
+          "type": "integer"
+        },
+        "report_state": {
+          "$ref": "#/$defs/ReportState",
+          "default": "not_started"
+        },
+        "completed_rounds": {
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Completed Rounds",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "usage": {
+          "$ref": "#/$defs/UsageSummary"
+        }
+      },
+      "required": [
+        "session_id",
+        "case_id",
+        "case_version",
+        "completed_rounds",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "SessionSummary",
+      "type": "object"
+    },
+    "UsageSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "requests": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Requests",
+          "type": "integer"
+        },
+        "input_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "unknown_requests": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Unknown Requests",
+          "type": "integer"
+        },
+        "reserved_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reserved Tokens",
+          "type": "integer"
+        },
+        "max_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Calls",
+          "type": "integer"
+        },
+        "token_budget": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Token Budget",
+          "type": "integer"
+        }
+      },
+      "title": "UsageSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/SessionSummary"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "items",
+    "total"
+  ],
+  "title": "SessionHistory",
+  "type": "object"
+}

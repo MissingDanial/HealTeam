@@ -457,7 +457,7 @@ body {
     <h1>HealTeam</h1>
     <div class="divider"></div>
     <span class="subtitle">家庭治疗 AI 模拟系统</span>
-    <span class="version">v0.1.0</span>
+    <span class="version">S0 · 自动演示</span>
   </div>
 
   <!-- Left Panel -->
@@ -624,8 +624,8 @@ async function loadCaseDetail(caseId) {
       div.innerHTML = `
         <div class="member-dot" style="background:${m.color}"></div>
         <div>
-          <div class="member-name">${info.name || m.label}</div>
-          <div class="member-role">${info.age ? info.age + '岁' : ''} ${info.trait || ''}</div>
+          <div class="member-name">${escapeHtml(info.name || m.label)}</div>
+          <div class="member-role">${info.age ? info.age + '岁' : ''} ${escapeHtml(info.trait || '')}</div>
         </div>`;
       familyDiv.appendChild(div);
     });
@@ -638,7 +638,7 @@ async function loadCaseDetail(caseId) {
       const patterns = data.defense_patterns[m.key] || [];
       if (patterns.length > 0) {
         const p = patterns[0];
-        defDiv.innerHTML += `<div style="margin-bottom:6px"><strong style="color:${m.color}">${m.label}:</strong> ${p.name || ''}</div>`;
+        defDiv.innerHTML += `<div style="margin-bottom:6px"><strong style="color:${m.color}">${m.label}:</strong> ${escapeHtml(p.name || '')}</div>`;
       }
     });
     document.getElementById('defenseSection').style.display = '';
@@ -672,16 +672,25 @@ async function startSession() {
   const school = document.getElementById('schoolSelect').value;
   const maxRounds = parseInt(document.getElementById('roundsInput').value) || 10;
 
+  let didComplete = false;
   try {
-    const res = await fetch(`${API_BASE}/api/v1/sessions`, {
+    const res = await fetch(`${API_BASE}/api/v1/demo/sessions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ case_id: caseId, school, max_rounds: maxRounds }),
     });
 
+    if (res.status === 410) throw new Error('旧版演示已整合到新版首页，请从前端首页选择“自动演示”。');
+    if (!res.ok) throw new Error(`请求未被接受（HTTP ${res.status}），请检查模型配置、案例和轮数。`);
+    if (!res.headers.get('content-type')?.includes('text/event-stream') || !res.body) {
+      throw new Error('服务未返回会话事件流。');
+    }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
+    // Network reads can split any SSE field or message boundary.
+    let eventType = '';
+    let eventData = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -691,9 +700,6 @@ async function startSession() {
       const lines = buffer.split('\n');
       buffer = lines.pop() || '';
 
-      let eventType = '';
-      let eventData = '';
-
       for (const line of lines) {
         if (line.startsWith('event: ')) {
           eventType = line.slice(7).trim();
@@ -701,6 +707,7 @@ async function startSession() {
           eventData = line.slice(6);
         } else if (line === '' && eventType && eventData) {
           handleEvent(eventType, JSON.parse(eventData));
+          if (eventType === 'complete') didComplete = true;
           eventType = '';
           eventData = '';
         }
@@ -713,7 +720,9 @@ async function startSession() {
     isRunning = false;
     btn.disabled = false;
     btn.textContent = '开始模拟';
-    document.getElementById('statStatus').innerHTML = '<span class="status-dot done"></span>已结束';
+    document.getElementById('statStatus').innerHTML = didComplete
+      ? '<span class="status-dot done"></span>已完成'
+      : '<span class="status-dot"></span>未完成';
   }
 }
 
@@ -722,6 +731,9 @@ function handleEvent(type, data) {
   switch (type) {
     case 'start':
       document.getElementById('statRound').textContent = `0 / ${data.max_rounds}`;
+      addSystemMessage(data.model_mode === 'mock'
+        ? '离线流程演示（mock）：使用固定占位回复，不代表训练评价。'
+        : '真实模型自动演示：当前由 AI 治疗师发言。');
       break;
 
     case 'utterance':
@@ -802,7 +814,7 @@ function addHintBubble(round, trigger, content, confidence) {
   bubble.innerHTML = `
     <div class="bubble-avatar">观</div>
     <div class="bubble-body">
-      <div class="bubble-name">旁观者 · ${trigger}</div>
+      <div class="bubble-name">旁观者 · ${escapeHtml(trigger)}</div>
       <div class="bubble-content">${escapeHtml(content)}</div>
     </div>`;
   chatArea.appendChild(bubble);
@@ -817,7 +829,7 @@ function addHintItem(round, trigger, content) {
   const item = document.createElement('div');
   item.className = 'hint-item';
   item.innerHTML = `
-    <div class="hint-trigger">R${round} · ${trigger}</div>
+    <div class="hint-trigger">R${round} · ${escapeHtml(trigger)}</div>
     <div>${escapeHtml(content)}</div>`;
   hintsArea.prepend(item);
 }

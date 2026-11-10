@@ -1,0 +1,111 @@
+{
+  "stage": "S2 local training reliability",
+  "version": "0.3.0",
+  "contract_version": "0.3.0",
+  "verified_on": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "node_major": 24,
+  "browser": "Microsoft Edge via Playwright",
+  "model_mode": "mock",
+  "external_model_calls": 0,
+  "professional_scoring": false,
+  "database": {
+    "engine": "local file SQLite",
+    "schema_version": 1,
+    "runtime_ownership": "OS-held sidecar file lock",
+    "busy_timeout_seconds": 2
+  },
+  "pytest": {
+    "passed": 300,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 1,
+    "groups": {
+      "api": 49,
+      "cases": 74,
+      "contracts": 26,
+      "integration": 24,
+      "memory": 46,
+      "prompts": 36,
+      "reliability": 5,
+      "training": 40
+    },
+    "skip_reason": "POSIX fork is unavailable on Windows"
+  },
+  "browser_checks": {
+    "status": "passed",
+    "reliability_scenarios": [
+      "readiness_failure_disables_create_and_can_reconnect",
+      "ambiguous_create_survives_reload_and_reuses_request_id",
+      "unsent_draft_survives_page_reload",
+      "post_timeout_reload_and_same_command_retry_without_duplication",
+      "accepted_response_loss_is_reconciled_by_exact_id_after_reload",
+      "accepted_command_can_be_replayed_without_a_second_human_turn",
+      "late_post_response_cannot_clear_newly_mounted_workspace_draft",
+      "mobile_offline_banner_draft_preservation_and_online_reconnect",
+      "terminal_session_clears_tab_draft_and_preserves_report",
+      "late_failed_report_response_cannot_replace_recovered_report",
+      "interrupted_report_retries_without_replaying_conversation",
+      "interrupted_simulation_remains_read_only"
+    ],
+    "core_scenarios": [
+      "homepage_defaults_and_case_configuration",
+      "human_therapist_turn_and_no_ai_doctor",
+      "refresh_and_native_sse_reconnect_without_duplicates",
+      "conflict_keeps_draft_and_retries_with_fresh_turn",
+      "saved_report_refresh_and_history_reopen",
+      "active_session_continuation_and_cancel",
+      "automatic_demo_uses_same_durable_protocol",
+      "mobile_composer_and_early_finish"
+    ],
+    "viewport": {
+      "width": 375,
+      "height": 844
+    },
+    "page_errors": [],
+    "timeout_route_cleanup": "passed",
+    "test_database_isolated": true
+  },
+  "real_process_acceptance": {
+    "status": "passed",
+    "scenarios": 5,
+    "bounded_burst_rounds": 30,
+    "identical_requests_per_round": 4,
+    "accepted_human_inputs": 30
+  },
+  "frontend": {
+    "production_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "offline_smoke": "passed",
+  "database_initialization": "passed",
+  "contract_export_check": "passed",
+  "modified_python_ruff": "passed",
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "clean_locked_runtime_wheel_install": "passed",
+    "isolated_installed_wheel_import": "passed",
+    "dependency_checks": "passed",
+    "source_archive_resource_manifest": "passed",
+    "source_archive_extracted_smoke": "passed",
+    "S1_static_resource_archive_repair": "passed"
+  },
+  "owned_services_stopped": true,
+  "not_verified": [
+    "Docker container build/runtime",
+    "external live model service",
+    "professional teaching validity",
+    "long-duration production stress",
+    "POSIX fork behavior on this Windows host"
+  ],
+  "out_of_scope": [
+    "multi-user authentication",
+    "distributed task scheduling",
+    "automatic replay of interrupted partial rounds",
+    "preemption of synchronous event-loop blocking code"
+  ]
+}

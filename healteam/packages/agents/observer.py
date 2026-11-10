@@ -13,7 +13,7 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
-from healteam_memory import Actor
+from healteam_memory import Actor, EventType
 
 from .base import (
     BaseAgent,
@@ -144,9 +144,12 @@ class ObserverAgent:
         if not context.round_events:
             return None
 
-        # Combine all recent event text.
+        # Parent/child behavior must not be inferred from the doctor's
+        # instructions, or from the observer's own private hints.
+        family_actors = {Actor.FATHER, Actor.MOTHER, Actor.PATIENT}
         recent_text = " ".join(
-            e.content for e in context.round_events if e.content
+            e.content for e in context.round_events
+            if e.content and e.type == EventType.UTTERANCE and e.actor in family_actors
         )
         if not recent_text:
             return None
@@ -158,12 +161,7 @@ class ObserverAgent:
                 existing_triggers.update(e.tags)
 
         # Get school-specific triggers.
-        school = "structural"  # default
-        if context.school_template:
-            for s in ["structural", "bowen", "satir"]:
-                if s in context.school_template.lower():
-                    school = s
-                    break
+        school = context.session.school.value
 
         # Check school-specific keyword triggers (once per trigger per round).
         school_triggers = _TRIGGERS.get(school, [])
@@ -263,7 +261,9 @@ class ObserverAgent:
         last_rounds_text = []
         for r in range(max(0, context.session.round - 3), context.session.round):
             round_text = " ".join(
-                e.content for e in events if e.round == r and e.content
+                e.content for e in events
+                if e.round == r and e.content and e.type == EventType.UTTERANCE
+                and e.actor in {Actor.FATHER, Actor.MOTHER, Actor.PATIENT}
             )
             if round_text:
                 last_rounds_text.append(round_text)
@@ -292,7 +292,10 @@ class ObserverAgent:
             "不想说", "无所谓", "随便", "不知道", "忘了", "不关",
             "不想", "别问", "别说了",
         ]
-        recent_events = context.round_events or []
+        recent_events = [
+            e for e in context.round_events
+            if e.type == EventType.UTTERANCE and e.actor in {Actor.FATHER, Actor.MOTHER, Actor.PATIENT}
+        ]
         if not recent_events:
             return 0.0
 

@@ -1,46 +1,52 @@
-"""Start HealTeam API server with frontend.
-
-Usage: py scripts/start_server.py
-Then open http://localhost:8000 in your browser.
-"""
+"""Start the local API; run the Next.js frontend in a separate terminal."""
 
 from __future__ import annotations
 
+import argparse
+import os
 import sys
-import webbrowser
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
 
-from repo_bootstrap import bootstrap_local_packages
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Start the HealTeam local API")
+    parser.add_argument("--root", type=Path, help="Source/resource root; defaults to HEALTEAM_ROOT")
+    parser.add_argument("--host", default="127.0.0.1", help="Bind address (default: 127.0.0.1)")
+    parser.add_argument("--port", type=int, help="Port (default: API_PORT or 8000)")
+    parser.add_argument("--reload", action="store_true", help="Reload on source changes")
+    args = parser.parse_args()
 
-bootstrap_local_packages(REPO_ROOT)
+    repo_root = (args.root or Path(os.getenv("HEALTEAM_ROOT") or Path(__file__).resolve().parents[1])).resolve()
+    if not (repo_root / "packages" / "memory").is_dir():
+        parser.error("HEALTEAM_ROOT must point to the healteam source directory")
 
-# Add apps/api to path so uvicorn can find the app.
-sys.path.insert(0, str(REPO_ROOT / "apps" / "api"))
+    from dotenv import load_dotenv
 
+    load_dotenv(repo_root / ".env", override=False)
+    os.environ["HEALTEAM_ROOT"] = str(repo_root)
+    try:
+        port = args.port if args.port is not None else int(os.getenv("API_PORT", "8000"))
+    except ValueError:
+        parser.error("API_PORT must be an integer")
+    if not 1 <= port <= 65535:
+        parser.error("Port must be between 1 and 65535")
 
-def main():
+    sys.path.insert(0, str(repo_root))
+    sys.path.insert(0, str(repo_root / "apps" / "api"))
+    from repo_bootstrap import bootstrap_local_packages
+
+    bootstrap_local_packages(repo_root)
     import uvicorn
 
-    print("=" * 60)
-    print("HealTeam 家庭治疗 AI 模拟系统")
-    print("=" * 60)
-    print(f"\n服务地址: http://localhost:8000")
-    print(f"API 文档: http://localhost:8000/docs")
-    print(f"\n按 Ctrl+C 停止服务器\n")
-
-    # Auto-open browser.
-    webbrowser.open("http://localhost:8000")
-
+    print(f"HealTeam API: http://{args.host}:{port}")
+    print("网页入口: http://127.0.0.1:3000（另行启动 apps/web）")
+    print("按 Ctrl+C 停止服务。")
     uvicorn.run(
         "app.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=False,
-        log_level="info",
+        host=args.host,
+        port=port,
+        reload=args.reload,
+        log_level=os.getenv("LOG_LEVEL", "info").lower(),
     )
 
 

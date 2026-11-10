@@ -1,0 +1,61 @@
+{
+  "stage": "S1 single-user local offline training loop",
+  "version": "0.2.0",
+  "verified_on": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "node_major": 24,
+  "browser": "Microsoft Edge via Playwright",
+  "model_mode": "mock",
+  "external_model_calls": 0,
+  "professional_scoring": false,
+  "database": {"engine": "local file SQLite", "schema_version": 1},
+  "pytest": {
+    "passed": 231,
+    "failed": 0,
+    "warnings": 1,
+    "groups": {
+      "api": 41,
+      "cases": 74,
+      "contracts": 21,
+      "integration": 24,
+      "prompts": 36,
+      "memory": 17,
+      "training": 18
+    }
+  },
+  "offline_smoke": "passed",
+  "database_initialization": "passed",
+  "contract_export_check": "passed",
+  "frontend": {"production_build": "passed", "typecheck": "passed", "lint": "passed"},
+  "browser_checks": {
+    "status": "passed",
+    "core_scenarios_passed": 8,
+    "mobile_viewport": {"width": 375, "height": 844},
+    "additional_mobile_scenarios_passed": 3,
+    "page_errors": [],
+    "test_database_isolated": true
+  },
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "isolated_wheel_import": "passed",
+    "clean_locked_runtime_install": "passed",
+    "development_dependency_check": "passed",
+    "clean_runtime_dependency_check": "passed"
+  },
+  "owned_services_stopped": true,
+  "not_verified": [
+    "Docker container build/runtime",
+    "external live model service",
+    "professional teaching validity",
+    "extended stress and fault-injection acceptance"
+  ],
+  "out_of_scope": [
+    "multi-user authentication",
+    "multi-process task scheduling",
+    "automatic replay of interrupted partial rounds",
+    "S0 file-report import"
+  ]
+}

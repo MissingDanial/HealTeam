@@ -1,0 +1,341 @@
+{
+  "$defs": {
+    "AIReview": {
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/ReviewPoint"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Observations",
+          "type": "array"
+        },
+        "next_steps": {
+          "items": {
+            "$ref": "#/$defs/ReviewPoint"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Next Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "observations",
+        "next_steps"
+      ],
+      "title": "AIReview",
+      "type": "object"
+    },
+    "Assessment": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "items": {
+            "$ref": "#/$defs/DimensionRating"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Dimensions",
+          "type": "array"
+        },
+        "milestones": {
+          "items": {
+            "$ref": "#/$defs/MilestoneRating"
+          },
+          "maxItems": 20,
+          "title": "Milestones",
+          "type": "array"
+        },
+        "rubric_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Rubric Version",
+          "type": "string"
+        },
+        "rubric_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Rubric Hash",
+          "type": "string"
+        },
+        "reviewed_event_seq": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 3000,
+          "minItems": 1,
+          "title": "Reviewed Event Seq",
+          "type": "array"
+        },
+        "total_utterances": {
+          "maximum": 3000,
+          "minimum": 1,
+          "title": "Total Utterances",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dimensions",
+        "rubric_version",
+        "rubric_hash",
+        "reviewed_event_seq",
+        "total_utterances"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "DimensionId": {
+      "enum": [
+        "participation",
+        "exploration",
+        "school_consistency",
+        "collaborative_next_step"
+      ],
+      "title": "DimensionId",
+      "type": "string"
+    },
+    "DimensionRating": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension_id": {
+          "$ref": "#/$defs/DimensionId"
+        },
+        "rating": {
+          "anyOf": [
+            {
+              "maximum": 2,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rating"
+        },
+        "rationale": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence_seq": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 12,
+          "title": "Evidence Seq",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimension_id",
+        "rating",
+        "rationale"
+      ],
+      "title": "DimensionRating",
+      "type": "object"
+    },
+    "MilestoneRating": {
+      "additionalProperties": false,
+      "properties": {
+        "milestone_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+          "title": "Milestone Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "not_observed",
+            "insufficient_evidence"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence_seq": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 12,
+          "title": "Evidence Seq",
+          "type": "array"
+        }
+      },
+      "required": [
+        "milestone_id",
+        "status",
+        "rationale"
+      ],
+      "title": "MilestoneRating",
+      "type": "object"
+    },
+    "ReportState": {
+      "enum": [
+        "not_started",
+        "generating",
+        "ready",
+        "failed",
+        "cancelled"
+      ],
+      "title": "ReportState",
+      "type": "string"
+    },
+    "ReviewPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_seq": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Evidence Seq",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_seq"
+      ],
+      "title": "ReviewPoint",
+      "type": "object"
+    },
+    "School": {
+      "description": "Therapeutic school (流派). Locked at session start.",
+      "enum": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "School",
+      "type": "string"
+    },
+    "SessionMode": {
+      "enum": [
+        "training",
+        "demo"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "session_id": {
+      "format": "uuid",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ReportState"
+    },
+    "content": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Content"
+    },
+    "kind": {
+      "enum": [
+        "workflow_check",
+        "ai_review"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "generated_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Generated At"
+    },
+    "school": {
+      "$ref": "#/$defs/School"
+    },
+    "mode": {
+      "$ref": "#/$defs/SessionMode"
+    },
+    "structured": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AIReview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rubric": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rubric"
+    },
+    "assessment": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Assessment"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "session_id",
+    "status",
+    "content",
+    "kind",
+    "generated_at",
+    "school",
+    "mode"
+  ],
+  "title": "WorkflowReport",
+  "type": "object"
+}

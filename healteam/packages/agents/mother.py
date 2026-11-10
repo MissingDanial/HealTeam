@@ -18,6 +18,7 @@ from .base import (
     SessionContext,
     load_system_prompt,
     make_placeholder_utterance,
+    room_events,
 )
 
 
@@ -182,7 +183,7 @@ class MotherAgent:
             parts.append("")
 
         # Recent conversation.
-        recent = context.session.events[-8:] if context.session.events else []
+        recent = room_events(context.session)[-8:]
         if recent:
             parts.append("最近的对话:")
             for evt in recent:

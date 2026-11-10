@@ -1,19 +1,22 @@
-[tool.poetry]
+[project]
 name = "healteam-agents"
 version = "0.1.0"
 description = "HealTeam AI agents and LangGraph orchestrator"
-authors = ["HealTeam <dev@healteam.local>"]
-license = "Proprietary"
-packages = [{include = "."}]
+requires-python = ">=3.11,<3.13"
+license = "MIT"
+dependencies = [
+    "healteam-memory==0.1.0",
+    "pydantic>=2.10,<3",
+    "langgraph>=0.2,<1",
+    "langchain-core>=0.3,<1",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.11,<3.13"
-pydantic = ">=2.6,<3.0"
-langgraph = ">=0.2,<1.0"
-langchain-core = ">=0.3,<1.0"
+[tool.setuptools]
+packages = ["healteam_agents"]
 
-healteam-memory = {path = "../memory", develop = true}
+[tool.setuptools.package-dir]
+healteam_agents = "."
 
 [build-system]
-requires = ["poetry-core>=1.9.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"

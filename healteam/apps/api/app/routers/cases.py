@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-router = APIRouter()
+from ..resources import CaseResourceError, cases_directory, load_validated_case
 
-DATA_DIR = Path(__file__).resolve().parents[4] / "data" / "cases"
+router = APIRouter()
 
 
 class CaseSummary(BaseModel):
@@ -21,6 +18,7 @@ class CaseSummary(BaseModel):
 
 class CaseDetail(BaseModel):
     case_id: str
+    version: str
     title: str
     presenting_problem: str
     family: dict
@@ -33,29 +31,30 @@ class CaseDetail(BaseModel):
 @router.get("", response_model=list[CaseSummary], summary="List available cases")
 async def list_cases() -> list[CaseSummary]:
     cases: list[CaseSummary] = []
-    if not DATA_DIR.exists():
-        return cases
-    for f in sorted(DATA_DIR.glob("*.json")):
-        try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            cases.append(CaseSummary(
-                case_id=data.get("case_id", f.stem),
-                title=data.get("title", ""),
-                presenting_problem=data.get("presenting_problem", ""),
-            ))
-        except Exception:
-            continue
+    try:
+        for f in sorted(cases_directory().glob("*.json")):
+            data = load_validated_case(f.stem)
+            cases.append(
+                CaseSummary(
+                    case_id=data.get("case_id", f.stem),
+                    title=data.get("title", ""),
+                    presenting_problem=data.get("presenting_problem", ""),
+                )
+            )
+    except CaseResourceError as exc:
+        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code}) from None
     return cases
 
 
 @router.get("/{case_id}", response_model=CaseDetail, summary="Get case details")
 async def get_case(case_id: str) -> CaseDetail:
-    case_path = DATA_DIR / f"{case_id}.json"
-    if not case_path.exists():
-        raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
-    data = json.loads(case_path.read_text(encoding="utf-8"))
+    try:
+        data = load_validated_case(case_id)
+    except CaseResourceError as exc:
+        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code}) from None
     return CaseDetail(
         case_id=data.get("case_id", case_id),
+        version=data["version"],
         title=data.get("title", ""),
         presenting_problem=data.get("presenting_problem", ""),
         family=data.get("family", {}),

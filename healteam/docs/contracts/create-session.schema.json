@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "School": {
+      "description": "Therapeutic school (流派). Locked at session start.",
+      "enum": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "School",
+      "type": "string"
+    },
+    "SessionMode": {
+      "enum": [
+        "training",
+        "demo"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "client_request_id": {
+      "format": "uuid",
+      "title": "Client Request Id",
+      "type": "string"
+    },
+    "case_id": {
+      "maxLength": 128,
+      "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "school": {
+      "$ref": "#/$defs/School"
+    },
+    "mode": {
+      "$ref": "#/$defs/SessionMode",
+      "default": "training"
+    },
+    "max_rounds": {
+      "default": 10,
+      "maximum": 30,
+      "minimum": 1,
+      "title": "Max Rounds",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "client_request_id",
+    "case_id",
+    "school"
+  ],
+  "title": "CreateSessionCommand",
+  "type": "object"
+}

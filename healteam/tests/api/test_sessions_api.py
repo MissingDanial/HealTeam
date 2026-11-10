@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -12,6 +13,12 @@ if str(API_DIR) not in sys.path:
 
 from app.main import create_app  # noqa: E402
 from app.routers import sessions as sessions_router  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def offline_temporary_database(monkeypatch, tmp_path):
+    monkeypatch.setenv("HEALTEAM_MODEL_MODE", "mock")
+    monkeypatch.setenv("HEALTEAM_DATABASE_URL", str(tmp_path / "legacy.sqlite3"))
 
 
 def _collect_sse_events(response: TestClient) -> list[str]:
@@ -31,13 +38,13 @@ def test_create_session_streams_events_and_persists_history(monkeypatch) -> None
 
     monkeypatch.setattr(sessions_router, "run_session", fake_run_session)
     sessions_router._session_history.clear()
-    app = create_app()
+    app = create_app(allow_legacy_demo=True)
 
     with TestClient(app) as client:
-        with client.stream("POST", "/api/v1/sessions", json={"max_rounds": 3}) as response:
+        with client.stream("POST", "/api/v1/demo/sessions", json={"max_rounds": 3}) as response:
             events = _collect_sse_events(response)
 
-        history = client.get("/api/v1/sessions").json()
+        history = client.get("/api/v1/demo/sessions").json()
 
     assert response.status_code == 200
     assert events == ["start", "session_end", "complete"]
@@ -58,13 +65,13 @@ def test_create_session_returns_error_immediately_when_runner_crashes(monkeypatc
 
     monkeypatch.setattr(sessions_router, "run_session", crashing_run_session)
     sessions_router._session_history.clear()
-    app = create_app()
+    app = create_app(allow_legacy_demo=True)
 
     with TestClient(app) as client:
-        with client.stream("POST", "/api/v1/sessions", json={}) as response:
+        with client.stream("POST", "/api/v1/demo/sessions", json={}) as response:
             events = _collect_sse_events(response)
 
-        history = client.get("/api/v1/sessions").json()
+        history = client.get("/api/v1/demo/sessions").json()
 
     assert response.status_code == 200
     assert events == ["error"]
