@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "session_id": {
+      "format": "uuid",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "client_message_id": {
+      "format": "uuid",
+      "title": "Client Message Id",
+      "type": "string"
+    },
+    "accepted_turn": {
+      "maximum": 30,
+      "minimum": 1,
+      "title": "Accepted Turn",
+      "type": "integer"
+    },
+    "state": {
+      "const": "running",
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "session_id",
+    "client_message_id",
+    "accepted_turn",
+    "state"
+  ],
+  "title": "MessageReceipt",
+  "type": "object"
+}

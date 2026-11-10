@@ -1,0 +1,58 @@
+{
+  "stage": "S0 baseline and contracts",
+  "verified_on": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "python": "3.12.13",
+  "model_mode": "mock",
+  "external_model_calls": 0,
+  "pytest": {
+    "passed": 182,
+    "failed": 0,
+    "warnings": 1,
+    "groups": {
+      "api": 27,
+      "cases": 74,
+      "contracts": 21,
+      "integration": 24,
+      "prompts": 36
+    }
+  },
+  "frontend": {
+    "production_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "isolated_wheel_import": "passed",
+    "clean_locked_runtime_install": "passed"
+  },
+  "browser": {
+    "status": "passed",
+    "checks": [
+      "homepage",
+      "same_origin_case_api",
+      "three_round_satir_mock",
+      "report_badge",
+      "one_byte_sse_chunks",
+      "hint_text_safety",
+      "http_failure_state"
+    ],
+    "page_errors": []
+  },
+  "owned_services_stopped": true,
+  "not_verified": [
+    "Docker container build/runtime",
+    "external live model service",
+    "professional teaching validity"
+  ],
+  "not_implemented_in_S0": [
+    "human training UI",
+    "SQLite session persistence",
+    "durable session manager",
+    "reconnect replay",
+    "server-side cancellation of the legacy worker thread",
+    "formal report query API"
+  ]
+}

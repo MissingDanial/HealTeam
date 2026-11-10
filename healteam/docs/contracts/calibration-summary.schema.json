@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "CalibrationGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "rubric_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Rubric Hash",
+          "type": "string"
+        },
+        "rubric_version": {
+          "title": "Rubric Version",
+          "type": "string"
+        },
+        "school": {
+          "title": "School",
+          "type": "string"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model"
+        },
+        "reviewed_sessions": {
+          "minimum": 0,
+          "title": "Reviewed Sessions",
+          "type": "integer"
+        },
+        "paired_dimensions": {
+          "minimum": 0,
+          "title": "Paired Dimensions",
+          "type": "integer"
+        },
+        "exact_matches": {
+          "minimum": 0,
+          "title": "Exact Matches",
+          "type": "integer"
+        },
+        "exact_agreement": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Agreement"
+        },
+        "insufficient_pairs": {
+          "minimum": 0,
+          "title": "Insufficient Pairs",
+          "type": "integer"
+        },
+        "out_of_window_pairs": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Out Of Window Pairs",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "rubric_hash",
+        "rubric_version",
+        "school",
+        "provider",
+        "model",
+        "reviewed_sessions",
+        "paired_dimensions",
+        "exact_matches",
+        "insufficient_pairs"
+      ],
+      "title": "CalibrationGroup",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "const": "awaiting_expert_calibration",
+      "default": "awaiting_expert_calibration",
+      "title": "Status",
+      "type": "string"
+    },
+    "total_sessions": {
+      "minimum": 0,
+      "title": "Total Sessions",
+      "type": "integer"
+    },
+    "eligible_sessions": {
+      "minimum": 0,
+      "title": "Eligible Sessions",
+      "type": "integer"
+    },
+    "reviewed_sessions": {
+      "minimum": 0,
+      "title": "Reviewed Sessions",
+      "type": "integer"
+    },
+    "paired_dimensions": {
+      "minimum": 0,
+      "title": "Paired Dimensions",
+      "type": "integer"
+    },
+    "exact_matches": {
+      "minimum": 0,
+      "title": "Exact Matches",
+      "type": "integer"
+    },
+    "exact_agreement": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exact Agreement"
+    },
+    "insufficient_pairs": {
+      "minimum": 0,
+      "title": "Insufficient Pairs",
+      "type": "integer"
+    },
+    "out_of_window_pairs": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Out Of Window Pairs",
+      "type": "integer"
+    },
+    "excluded_demo_sessions": {
+      "minimum": 0,
+      "title": "Excluded Demo Sessions",
+      "type": "integer"
+    },
+    "groups": {
+      "items": {
+        "$ref": "#/$defs/CalibrationGroup"
+      },
+      "title": "Groups",
+      "type": "array"
+    }
+  },
+  "required": [
+    "total_sessions",
+    "eligible_sessions",
+    "reviewed_sessions",
+    "paired_dimensions",
+    "exact_matches",
+    "insufficient_pairs",
+    "excluded_demo_sessions",
+    "groups"
+  ],
+  "title": "CalibrationSummary",
+  "type": "object"
+}

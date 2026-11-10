@@ -46,8 +46,8 @@ def generate_report(
         sections.append("## 案例概要\n")
         if case.get("title"):
             sections.append(f"**标题**: {case['title']}")
-        if case.get("description"):
-            sections.append(f"**描述**: {case['description']}")
+        if case.get("summary"):
+            sections.append(f"**描述**: {case['summary']}")
         sections.append("")
 
         # Family members.

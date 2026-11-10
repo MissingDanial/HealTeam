@@ -1,0 +1,863 @@
+{
+  "$defs": {
+    "Boundaries": {
+      "additionalProperties": false,
+      "properties": {
+        "father_mother": {
+          "$ref": "#/$defs/Boundary"
+        },
+        "mother_patient": {
+          "$ref": "#/$defs/Boundary"
+        },
+        "father_patient": {
+          "$ref": "#/$defs/Boundary"
+        }
+      },
+      "required": [
+        "father_mother",
+        "mother_patient",
+        "father_patient"
+      ],
+      "title": "Boundaries",
+      "type": "object"
+    },
+    "Boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Type",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "description"
+      ],
+      "title": "Boundary",
+      "type": "object"
+    },
+    "BowenAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "differentiation_of_self": {
+          "$ref": "#/$defs/FamilyEmotions"
+        },
+        "family_projection_process": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Family Projection Process",
+          "type": "string"
+        },
+        "multigenerational_transmission": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Multigenerational Transmission",
+          "type": "string"
+        },
+        "triangulation": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Triangulation",
+          "type": "string"
+        },
+        "sibling_position": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Sibling Position",
+          "type": "string"
+        }
+      },
+      "required": [
+        "differentiation_of_self",
+        "family_projection_process",
+        "multigenerational_transmission",
+        "triangulation",
+        "sibling_position"
+      ],
+      "title": "BowenAnalysis",
+      "type": "object"
+    },
+    "ClinicalNotes": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnosis_considerations": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Diagnosis Considerations",
+          "type": "array"
+        },
+        "contraindications": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Contraindications",
+          "type": "array"
+        },
+        "supervision_focus_areas": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Supervision Focus Areas",
+          "type": "array"
+        },
+        "references": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "diagnosis_considerations",
+        "contraindications",
+        "supervision_focus_areas",
+        "references"
+      ],
+      "title": "ClinicalNotes",
+      "type": "object"
+    },
+    "CommunicationStances": {
+      "additionalProperties": false,
+      "properties": {
+        "father_default": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Father Default",
+          "type": "string"
+        },
+        "mother_default": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Mother Default",
+          "type": "string"
+        },
+        "patient_default": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Patient Default",
+          "type": "string"
+        }
+      },
+      "required": [
+        "father_default",
+        "mother_default",
+        "patient_default"
+      ],
+      "title": "CommunicationStances",
+      "type": "object"
+    },
+    "DefensePattern": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Description",
+          "type": "string"
+        },
+        "example": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Example",
+          "type": "string"
+        },
+        "underlying_fear": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Underlying Fear"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "example"
+      ],
+      "title": "DefensePattern",
+      "type": "object"
+    },
+    "Family": {
+      "additionalProperties": false,
+      "properties": {
+        "father": {
+          "$ref": "#/$defs/FamilyMember"
+        },
+        "mother": {
+          "$ref": "#/$defs/FamilyMember"
+        },
+        "patient": {
+          "$ref": "#/$defs/FamilyMember"
+        }
+      },
+      "required": [
+        "father",
+        "mother",
+        "patient"
+      ],
+      "title": "Family",
+      "type": "object"
+    },
+    "FamilyEmotions": {
+      "additionalProperties": false,
+      "properties": {
+        "father": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Father",
+          "type": "string"
+        },
+        "mother": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Mother",
+          "type": "string"
+        },
+        "patient": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Patient",
+          "type": "string"
+        }
+      },
+      "required": [
+        "father",
+        "mother",
+        "patient"
+      ],
+      "title": "FamilyEmotions",
+      "type": "object"
+    },
+    "FamilyMember": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Name",
+          "type": "string"
+        },
+        "age": {
+          "maximum": 120,
+          "minimum": 0,
+          "title": "Age",
+          "type": "integer"
+        },
+        "gender": {
+          "enum": [
+            "male",
+            "female",
+            "other",
+            "unspecified"
+          ],
+          "title": "Gender",
+          "type": "string"
+        },
+        "occupation": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Occupation",
+          "type": "string"
+        },
+        "trait": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Trait",
+          "type": "string"
+        },
+        "emotional_register": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Emotional Register",
+          "type": "string"
+        },
+        "defense_pattern": {
+          "items": {
+            "$ref": "#/$defs/DefensePattern"
+          },
+          "minItems": 1,
+          "title": "Defense Pattern",
+          "type": "array"
+        },
+        "origin_family_note": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Origin Family Note"
+        },
+        "education": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Education"
+        },
+        "school_context_note": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "School Context Note"
+        }
+      },
+      "required": [
+        "name",
+        "age",
+        "gender",
+        "occupation",
+        "trait",
+        "emotional_register",
+        "defense_pattern"
+      ],
+      "title": "FamilyMember",
+      "type": "object"
+    },
+    "FamilyPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "structural": {
+          "$ref": "#/$defs/StructuralAnalysis"
+        },
+        "bowen": {
+          "$ref": "#/$defs/BowenAnalysis"
+        },
+        "satir": {
+          "$ref": "#/$defs/SatirAnalysis"
+        }
+      },
+      "required": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "FamilyPattern",
+      "type": "object"
+    },
+    "Milestone": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Label",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Description",
+          "type": "string"
+        },
+        "expected_window_rounds": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Expected Window Rounds",
+          "type": "string"
+        },
+        "validation_signals": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Validation Signals",
+          "type": "array"
+        },
+        "primary_school": {
+          "items": {
+            "$ref": "#/$defs/School"
+          },
+          "minItems": 1,
+          "title": "Primary School",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "description",
+        "expected_window_rounds",
+        "validation_signals",
+        "primary_school"
+      ],
+      "title": "Milestone",
+      "type": "object"
+    },
+    "OpeningContext": {
+      "additionalProperties": false,
+      "properties": {
+        "scene": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Scene",
+          "type": "string"
+        },
+        "atmosphere": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Atmosphere",
+          "type": "string"
+        },
+        "emotional_states": {
+          "$ref": "#/$defs/FamilyEmotions"
+        },
+        "doctor_first_utterance_direction": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Doctor First Utterance Direction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scene",
+        "atmosphere",
+        "emotional_states",
+        "doctor_first_utterance_direction"
+      ],
+      "title": "OpeningContext",
+      "type": "object"
+    },
+    "RoleHint": {
+      "additionalProperties": false,
+      "properties": {
+        "speaking_style": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Speaking Style",
+          "type": "string"
+        },
+        "first_utterance_draft": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "First Utterance Draft",
+          "type": "string"
+        }
+      },
+      "required": [
+        "speaking_style",
+        "first_utterance_draft"
+      ],
+      "title": "RoleHint",
+      "type": "object"
+    },
+    "RoleHints": {
+      "additionalProperties": false,
+      "properties": {
+        "father": {
+          "$ref": "#/$defs/RoleHint"
+        },
+        "mother": {
+          "$ref": "#/$defs/RoleHint"
+        },
+        "patient": {
+          "$ref": "#/$defs/RoleHint"
+        }
+      },
+      "required": [
+        "father",
+        "mother",
+        "patient"
+      ],
+      "title": "RoleHints",
+      "type": "object"
+    },
+    "SatirAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "communication_stances": {
+          "$ref": "#/$defs/CommunicationStances"
+        },
+        "family_life_process_disruption": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Family Life Process Disruption",
+          "type": "string"
+        },
+        "iceberg_dynamics": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Iceberg Dynamics",
+          "type": "string"
+        },
+        "congruence_level": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Congruence Level",
+          "type": "string"
+        }
+      },
+      "required": [
+        "communication_stances",
+        "family_life_process_disruption",
+        "iceberg_dynamics",
+        "congruence_level"
+      ],
+      "title": "SatirAnalysis",
+      "type": "object"
+    },
+    "School": {
+      "description": "Therapeutic school (流派). Locked at session start.",
+      "enum": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "School",
+      "type": "string"
+    },
+    "SchoolAffinity": {
+      "additionalProperties": false,
+      "properties": {
+        "structural": {
+          "$ref": "#/$defs/SchoolSuitability"
+        },
+        "bowen": {
+          "$ref": "#/$defs/SchoolSuitability"
+        },
+        "satir": {
+          "$ref": "#/$defs/SchoolSuitability"
+        }
+      },
+      "required": [
+        "structural",
+        "bowen",
+        "satir"
+      ],
+      "title": "SchoolAffinity",
+      "type": "object"
+    },
+    "SchoolSuitability": {
+      "additionalProperties": false,
+      "properties": {
+        "suitability": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Suitability",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "key_techniques_to_apply": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Key Techniques To Apply",
+          "type": "array"
+        }
+      },
+      "required": [
+        "suitability",
+        "rationale",
+        "key_techniques_to_apply"
+      ],
+      "title": "SchoolSuitability",
+      "type": "object"
+    },
+    "StructuralAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "subsystems": {
+          "$ref": "#/$defs/Subsystems"
+        },
+        "boundaries": {
+          "$ref": "#/$defs/Boundaries"
+        },
+        "triangles": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Triangles",
+          "type": "array"
+        }
+      },
+      "required": [
+        "subsystems",
+        "boundaries",
+        "triangles"
+      ],
+      "title": "StructuralAnalysis",
+      "type": "object"
+    },
+    "Subsystems": {
+      "additionalProperties": false,
+      "properties": {
+        "marital_subsystem": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Marital Subsystem",
+          "type": "string"
+        },
+        "parental_subsystem": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Parental Subsystem",
+          "type": "string"
+        },
+        "parent_child_subsystem": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Parent Child Subsystem",
+          "type": "string"
+        },
+        "sibling_subsystem": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Sibling Subsystem",
+          "type": "string"
+        }
+      },
+      "required": [
+        "marital_subsystem",
+        "parental_subsystem",
+        "parent_child_subsystem",
+        "sibling_subsystem"
+      ],
+      "title": "Subsystems",
+      "type": "object"
+    },
+    "TreatmentFocus": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Title",
+          "type": "string"
+        },
+        "area": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Area",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Description",
+          "type": "string"
+        },
+        "primary_school_affinity": {
+          "items": {
+            "$ref": "#/$defs/School"
+          },
+          "minItems": 1,
+          "title": "Primary School Affinity",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "area",
+        "description",
+        "primary_school_affinity"
+      ],
+      "title": "TreatmentFocus",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "title": "Version",
+      "type": "string"
+    },
+    "title": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Title",
+      "type": "string"
+    },
+    "subtitle": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Subtitle",
+      "type": "string"
+    },
+    "language": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Language",
+      "type": "string"
+    },
+    "archetype": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Archetype",
+      "type": "string"
+    },
+    "family_system_pattern": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Family System Pattern",
+      "type": "string"
+    },
+    "summary": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Summary",
+      "type": "string"
+    },
+    "presenting_problem": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Presenting Problem",
+      "type": "string"
+    },
+    "duration_weeks": {
+      "minimum": 0,
+      "title": "Duration Weeks",
+      "type": "integer"
+    },
+    "tier": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Tier",
+      "type": "string"
+    },
+    "family": {
+      "$ref": "#/$defs/Family"
+    },
+    "family_pattern": {
+      "$ref": "#/$defs/FamilyPattern"
+    },
+    "treatment_focus": {
+      "items": {
+        "$ref": "#/$defs/TreatmentFocus"
+      },
+      "minItems": 1,
+      "title": "Treatment Focus",
+      "type": "array"
+    },
+    "opening_context": {
+      "$ref": "#/$defs/OpeningContext"
+    },
+    "expected_milestones": {
+      "items": {
+        "$ref": "#/$defs/Milestone"
+      },
+      "minItems": 1,
+      "title": "Expected Milestones",
+      "type": "array"
+    },
+    "school_affinity": {
+      "$ref": "#/$defs/SchoolAffinity"
+    },
+    "clinical_notes": {
+      "$ref": "#/$defs/ClinicalNotes"
+    },
+    "agent_role_hints": {
+      "$ref": "#/$defs/RoleHints"
+    }
+  },
+  "required": [
+    "case_id",
+    "version",
+    "title",
+    "subtitle",
+    "language",
+    "archetype",
+    "family_system_pattern",
+    "summary",
+    "presenting_problem",
+    "duration_weeks",
+    "tier",
+    "family",
+    "family_pattern",
+    "treatment_focus",
+    "opening_context",
+    "expected_milestones",
+    "school_affinity",
+    "clinical_notes",
+    "agent_role_hints"
+  ],
+  "title": "CaseDefinition",
+  "type": "object"
+}

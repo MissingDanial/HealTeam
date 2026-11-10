@@ -1,0 +1,225 @@
+{
+  "$defs": {
+    "DimensionId": {
+      "enum": [
+        "participation",
+        "exploration",
+        "school_consistency",
+        "collaborative_next_step"
+      ],
+      "title": "DimensionId",
+      "type": "string"
+    },
+    "DimensionRating": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension_id": {
+          "$ref": "#/$defs/DimensionId"
+        },
+        "rating": {
+          "anyOf": [
+            {
+              "maximum": 2,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rating"
+        },
+        "rationale": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence_seq": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 12,
+          "title": "Evidence Seq",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimension_id",
+        "rating",
+        "rationale"
+      ],
+      "title": "DimensionRating",
+      "type": "object"
+    },
+    "MilestoneRating": {
+      "additionalProperties": false,
+      "properties": {
+        "milestone_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+          "title": "Milestone Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "not_observed",
+            "insufficient_evidence"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence_seq": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 12,
+          "title": "Evidence Seq",
+          "type": "array"
+        }
+      },
+      "required": [
+        "milestone_id",
+        "status",
+        "rationale"
+      ],
+      "title": "MilestoneRating",
+      "type": "object"
+    },
+    "ReviewRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "items": {
+            "$ref": "#/$defs/DimensionRating"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Dimensions",
+          "type": "array"
+        },
+        "milestones": {
+          "items": {
+            "$ref": "#/$defs/MilestoneRating"
+          },
+          "maxItems": 20,
+          "title": "Milestones",
+          "type": "array"
+        },
+        "review_id": {
+          "format": "uuid",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "session_id": {
+          "format": "uuid",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "client_review_id": {
+          "format": "uuid",
+          "title": "Client Review Id",
+          "type": "string"
+        },
+        "report_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Report Hash",
+          "type": "string"
+        },
+        "rubric_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Rubric Hash",
+          "type": "string"
+        },
+        "reviewer_name": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Reviewer Name",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "reviewer_identity_verified": {
+          "const": false,
+          "default": false,
+          "title": "Reviewer Identity Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "dimensions",
+        "review_id",
+        "session_id",
+        "revision",
+        "created_at",
+        "client_review_id",
+        "report_hash",
+        "rubric_hash",
+        "reviewer_name"
+      ],
+      "title": "ReviewRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "session_id": {
+      "format": "uuid",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "report_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Report Hash",
+      "type": "string"
+    },
+    "rubric_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Rubric Hash",
+      "type": "string"
+    },
+    "latest_revision": {
+      "minimum": 0,
+      "title": "Latest Revision",
+      "type": "integer"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ReviewRecord"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "session_id",
+    "report_hash",
+    "rubric_hash",
+    "latest_revision",
+    "items"
+  ],
+  "title": "ReviewHistory",
+  "type": "object"
+}

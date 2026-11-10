@@ -1,0 +1,91 @@
+{
+  "stage": "S4 trial evaluation and local human review",
+  "version": "0.5.0",
+  "contract_version": "0.5.0",
+  "verified_on": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "node_major": 24,
+  "database_schema_version": 2,
+  "migration": "atomic v1 to v2; original sessions/events/receipts/reports preserved",
+  "pytest": {
+    "passed": 482,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 1,
+    "groups": {
+      "api": 74,
+      "cases": 74,
+      "contracts": 30,
+      "evaluation": 13,
+      "integration": 24,
+      "memory": 79,
+      "prompts": 36,
+      "providers": 59,
+      "reliability": 5,
+      "training": 88
+    },
+    "skip_reason": "POSIX fork unavailable on Windows"
+  },
+  "browser": {
+    "status": "passed",
+    "core_scenarios": [
+      "zero_pairs_show_no_percentage_or_calibration_claim",
+      "trial_rubric_has_four_evidence_linked_dimensions_and_coverage",
+      "human_review_draft_survives_reload_and_preserves_original_report",
+      "revision_conflict_keeps_draft_and_requires_explicit_rebase",
+      "accepted_review_response_loss_reconciles_original_request_once",
+      "latest_revision_only_calibration_and_minimal_export",
+      "demo_review_is_observation_and_excluded_from_learner_calibration",
+      "mock_report_allows_human_review_without_ai_rating_pairs",
+      "mobile_assessment_review_and_calibration_have_no_horizontal_overflow"
+    ],
+    "targeted_scenarios": [
+      "malformed_tab_drafts_fall_back_without_crashing_or_adopting_invalid_ratings",
+      "conflict_and_failed_latest_get_recover_in_page_without_losing_draft",
+      "legacy_s3_report_and_evidence_open_without_invented_rubric_or_model_calls"
+    ],
+    "page_errors": [],
+    "mobile_width": 375
+  },
+  "frontend": {
+    "production_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "evaluation_validity": {
+    "rubric_status": "trial_unvalidated",
+    "calibration_status": "awaiting_expert_calibration",
+    "real_expert_annotations": 0,
+    "reviewer_identity_verified": false,
+    "synthetic_reference_provenance": "synthetic_software_reference_not_expert_annotations",
+    "total_score_provided": false
+  },
+  "external_paid_model_calls_this_stage": 0,
+  "training_or_review_data_sent_externally": false,
+  "modified_python_ruff": "passed",
+  "offline_smoke": "passed",
+  "database_initialization": "passed",
+  "contract_export_check": "passed",
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "clean_locked_runtime_install": "passed",
+    "clean_installed_wheel_import": "passed",
+    "dependency_checks": "passed",
+    "source_resource_manifest": "passed",
+    "source_extracted_smoke": "passed",
+    "private_key_excluded": "passed"
+  },
+  "private_configuration": "DeepSeek configuration retained only in local .env; review output cap 4096",
+  "owned_services_stopped": true,
+  "not_verified": [
+    "real expert calibration and teaching validity",
+    "professional credential verification",
+    "paid provider multi-round evaluation quality",
+    "Docker container build/runtime",
+    "long-duration upstream stress",
+    "multi-user access control"
+  ]
+}

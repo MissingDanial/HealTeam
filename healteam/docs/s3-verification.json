@@ -1,0 +1,105 @@
+{
+  "stage": "S3 model-backed local training",
+  "version": "0.4.0",
+  "contract_version": "0.4.0",
+  "verified_on": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "node_major": 24,
+  "database_schema_version": 1,
+  "providers": [
+    "deepseek",
+    "openai",
+    "anthropic"
+  ],
+  "pytest": {
+    "passed": 413,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 1,
+    "groups": {
+      "api": 66,
+      "cases": 74,
+      "contracts": 30,
+      "integration": 24,
+      "memory": 56,
+      "prompts": 36,
+      "providers": 59,
+      "reliability": 5,
+      "training": 63
+    },
+    "skip_reason": "POSIX fork unavailable on Windows"
+  },
+  "browser": {
+    "status": "passed",
+    "live_scenarios": [
+      "live_mode_disclosure_and_creation_enabled",
+      "human_turn_uses_live_family_without_ai_doctor",
+      "structured_ai_review_and_saved_usage",
+      "evidence_navigation_refresh_and_history_reopen",
+      "live_demo_is_distinct_from_learner_performance",
+      "auth_error_is_visible_without_mock_fallback",
+      "wrong_actor_is_visible_without_mock_fallback",
+      "invalid_report_evidence_can_retry_without_replaying_dialogue",
+      "mobile_live_disclosure_review_and_usage_without_overflow",
+      "public_views_exclude_credentials_and_private_events"
+    ],
+    "mock_scenarios": [
+      "homepage_defaults_and_case_configuration",
+      "human_therapist_turn_and_no_ai_doctor",
+      "refresh_and_native_sse_reconnect_without_duplicates",
+      "conflict_keeps_draft_and_retries_with_fresh_turn",
+      "saved_report_refresh_and_history_reopen",
+      "active_session_continuation_and_cancel",
+      "automatic_demo_uses_same_durable_protocol",
+      "mobile_composer_and_early_finish"
+    ],
+    "cross_mode_history": "passed",
+    "page_errors": [],
+    "mobile_width": 375,
+    "external_paid_calls": 0
+  },
+  "deepseek_connection": {
+    "status": "passed",
+    "model": "deepseek-flash",
+    "model_list_http_status": 200,
+    "completion_http_status": 200,
+    "external_completion_calls": 1,
+    "input_tokens": 8,
+    "output_tokens": 1,
+    "total_tokens": 9,
+    "training_data_sent": false
+  },
+  "frontend": {
+    "production_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "modified_python_ruff": "passed",
+  "offline_smoke": "passed",
+  "contract_export_check": "passed",
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "clean_locked_runtime_install": "passed",
+    "clean_installed_wheel_import": "passed",
+    "dependency_checks": "passed",
+    "source_resources": "passed",
+    "source_extracted_smoke": "passed",
+    "private_key_excluded": "passed"
+  },
+  "private_configuration": "workspace-only .env; excluded from source archive",
+  "owned_services_stopped": true,
+  "not_verified": [
+    "paid provider multi-round simulation quality",
+    "professional teaching validity and expert scoring",
+    "Docker container build/runtime",
+    "long-duration upstream stress"
+  ],
+  "limitations": [
+    "context keeps latest whole utterances when limited",
+    "local token reservations are estimates, not billing caps",
+    "single local runtime, no multi-user authentication"
+  ]
+}

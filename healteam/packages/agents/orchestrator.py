@@ -321,17 +321,13 @@ def _make_node_load_case(orchestrator: "Orchestrator"):
         if state.get("case_context") is not None:
             return state
 
-        case_id = orchestrator.case_id
-        school = orchestrator.school
-        if case_id is None:
-            logger.warning("No case_id set; running without case data")
-            return state
-
-        try:
-            ctx = build_case_context(case_id, school)
-        except Exception:
-            logger.exception("Failed to load case %s", case_id)
-            return state
+        case_id = orchestrator.case_id or session.case_id
+        school = orchestrator.school or session.school
+        if case_id != session.case_id or school != session.school:
+            raise ValueError("Orchestrator configuration must match the session case and school")
+        # Bad content must fail before the first utterance, not after a whole
+        # session of model calls without a case.
+        ctx = build_case_context(case_id, school)
 
         # Initialize milestone tracking.
         raw_milestones = ctx.get("milestones", [])
@@ -351,10 +347,13 @@ def _make_node_load_case(orchestrator: "Orchestrator"):
 
 def _make_node_round_init(orchestrator: "Orchestrator"):
     def round_init(state: TherapyState) -> TherapyState:
-        # No more rigid round plan — speaker selection is dynamic.
-        # Just reset round tracking state.
+        # state.round counts completed rounds at this boundary. Publish the
+        # next one to the session BEFORE any agent sees the turn context.
+        session: Session = state["session"]
+        session.round = state.get("round", 0) + 1
         return {
             **state,
+            "round": session.round,
             "speakers_this_round": [],
             "doctor_spoke_this_round": False,
             "round_active": True,
@@ -448,11 +447,9 @@ def _make_node_agent_respond(orchestrator: "Orchestrator"):
             current_speaker=speaker,
         )
 
-        try:
-            text = agent.respond(ctx)
-        except Exception:
-            logger.exception("agent.respond() failed for %s, using fallback", speaker)
-            text = f"[{speaker.value} 暂时无法回应]"
+        # A live model failure is a failed run, not a successful utterance.
+        # Explicit no-model demos are handled by each agent before this call.
+        text = agent.respond(ctx)
 
         # Append utterance event.
         evt = Event(
@@ -540,8 +537,8 @@ def _make_node_observer_hint(orchestrator: "Orchestrator"):
 
 def _make_node_update_memory(orchestrator: "Orchestrator"):
     def update_memory(state: TherapyState) -> TherapyState:
-        # Bump round counter at the end of each round.
-        new_round = state.get("round", 0) + 1
+        # The round was assigned at round_init; do not advance a second copy.
+        new_round = state["session"].round
 
         # Milestone tracking: check if any milestones were achieved this round.
         # (Full LLM-based detection is Phase 3; W2 does keyword-based stub.)
@@ -636,11 +633,13 @@ class Orchestrator:
 
     max_rounds: int = DEFAULT_MAX_ROUNDS
     case_id: Optional[str] = None
-    school: School = School.STRUCTURAL
+    school: Optional[School] = None
     agents: dict[Actor, BaseAgent] = field(default_factory=dict)
     _graph: Any = field(default=None, init=False, repr=False)
 
     def __post_init__(self) -> None:
+        if type(self.max_rounds) is not int or not 1 <= self.max_rounds <= 30:
+            raise ValueError("max_rounds must be an integer from 1 to 30")
         # Default 6 agents. Callers may override by setting ``self.agents`` after
         # construction (e.g. to inject fakes in tests).
         if not self.agents:
@@ -718,7 +717,7 @@ class Orchestrator:
         if loop and loop.is_running():
             # Already inside an event loop — run synchronously via invoke.
             state = _empty_state(session)
-            final: TherapyState = self._graph.invoke(state)
+            final: TherapyState = self._graph.invoke(state, config=self._run_config())
             session.round = int(final.get("round", session.round))
             return session
 
@@ -731,7 +730,7 @@ class Orchestrator:
         Returns the (mutated) session.
         """
         state = _empty_state(session)
-        final: TherapyState = await self._graph.ainvoke(state)
+        final: TherapyState = await self._graph.ainvoke(state, config=self._run_config())
         session.round = int(final.get("round", session.round))
         return session
 
@@ -741,7 +740,13 @@ class Orchestrator:
         Invokes the graph with a hard stop after one ``check_end`` cycle.
         """
         state = _empty_state(session)
-        return self._graph.invoke(state)
+        return self._graph.invoke(state, config=self._run_config())
+
+    def _run_config(self) -> dict[str, int]:
+        # One room utterance visits three nodes. Include the final no-speaker
+        # pass and outer-round nodes, with margin, independently of whichever
+        # LangGraph default a fresh environment happens to install.
+        return {"recursion_limit": self.max_rounds * (3 * MAX_SPEAKERS_PER_ROUND + 8) + 16}
 
 
 __all__ = [

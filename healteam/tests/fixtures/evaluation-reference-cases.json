@@ -1,0 +1,9 @@
+{
+  "provenance": "synthetic_software_reference_not_expert_annotations",
+  "cases": [
+    {"name": "exact", "ai": [1, 2, 0, 1], "human": [1, 2, 0, 1], "pairs": 4, "matches": 4, "insufficient": 0},
+    {"name": "mixed", "ai": [1, 2, null, 1], "human": [0, 2, 1, null], "pairs": 2, "matches": 1, "insufficient": 2},
+    {"name": "insufficient", "ai": [null, null, null, null], "human": [null, null, null, null], "pairs": 0, "matches": 0, "insufficient": 4},
+    {"name": "zero_is_observed", "ai": [0, 0, 0, 0], "human": [0, 0, 0, 0], "pairs": 4, "matches": 4, "insufficient": 0}
+  ]
+}

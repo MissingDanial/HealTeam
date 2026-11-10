@@ -1,0 +1,183 @@
+aiosqlite==0.22.1
+    # via healteam (pyproject.toml)
+annotated-doc==0.0.5
+    # via fastapi
+annotated-types==0.8.0
+    # via pydantic
+anthropic==0.125.0
+    # via healteam (pyproject.toml)
+anyio==4.16.0
+    # via
+    #   anthropic
+    #   httpx
+    #   httpx2
+    #   langsmith
+    #   starlette
+    #   watchfiles
+certifi==2026.10.23
+    # via
+    #   httpcore
+    #   httpx
+    #   requests
+charset-normalizer==3.5.2
+    # via requests
+click==8.5.0
+    # via uvicorn
+distro==1.9.0
+    # via
+    #   anthropic
+    #   langsmith
+docstring-parser==0.18.0
+    # via anthropic
+fastapi==0.162.0
+    # via healteam (pyproject.toml)
+greenlet==3.5.6
+    # via sqlalchemy
+h11==0.16.0
+    # via
+    #   httpcore
+    #   httpcore2
+    #   uvicorn
+httpcore==1.0.9
+    # via httpx
+httpcore2==2.16.0 ; sys_platform != 'emscripten'
+    # via httpx2
+httptools==0.9.0
+    # via uvicorn
+httpx==0.28.1
+    # via
+    #   healteam (pyproject.toml)
+    #   anthropic
+    #   langgraph-sdk
+httpx2==2.16.0
+    # via langsmith
+httpx2-jsfetch==1.0 ; python_full_version >= '3.12' and sys_platform == 'emscripten'
+    # via httpx2
+idna==3.20
+    # via
+    #   anyio
+    #   httpx
+    #   httpx2
+    #   requests
+jiter==0.18.0
+    # via anthropic
+jsonpatch==1.41
+    # via langchain-core
+jsonpointer==3.8
+    # via jsonpatch
+langchain-core==0.3.86
+    # via
+    #   healteam (pyproject.toml)
+    #   langgraph
+    #   langgraph-checkpoint
+    #   langgraph-prebuilt
+langgraph==0.6.11
+    # via healteam (pyproject.toml)
+langgraph-checkpoint==3.0.1
+    # via
+    #   langgraph
+    #   langgraph-prebuilt
+langgraph-prebuilt==0.6.5
+    # via langgraph
+langgraph-sdk==0.2.15
+    # via langgraph
+langsmith==0.14.17
+    # via langchain-core
+opentelemetry-api==1.45.2
+    # via fastapi
+orjson==3.13.0
+    # via
+    #   langgraph-sdk
+    #   langsmith
+ormsgpack==1.13.0
+    # via langgraph-checkpoint
+packaging==25.0
+    # via
+    #   langchain-core
+    #   langsmith
+pydantic==2.14.2
+    # via
+    #   healteam (pyproject.toml)
+    #   anthropic
+    #   fastapi
+    #   langchain-core
+    #   langgraph
+    #   langsmith
+    #   pydantic-settings
+pydantic-core==2.50.2
+    # via pydantic
+pydantic-settings==2.16.2
+    # via healteam (pyproject.toml)
+python-dotenv==1.2.4
+    # via
+    #   healteam (pyproject.toml)
+    #   pydantic-settings
+    #   uvicorn
+python-multipart==0.0.33
+    # via healteam (pyproject.toml)
+pyyaml==6.0.3
+    # via
+    #   langchain-core
+    #   uvicorn
+requests==2.34.2
+    # via
+    #   langsmith
+    #   requests-toolbelt
+requests-toolbelt==1.0.0
+    # via langsmith
+sniffio==1.3.1
+    # via
+    #   anthropic
+    #   langsmith
+sqlalchemy==2.0.57
+    # via healteam (pyproject.toml)
+starlette==1.10.0
+    # via fastapi
+tenacity==9.2.1
+    # via langchain-core
+truststore==0.10.5 ; sys_platform != 'emscripten'
+    # via
+    #   httpcore2
+    #   httpx2
+typing-extensions==4.16.0
+    # via
+    #   anthropic
+    #   anyio
+    #   fastapi
+    #   httpx2
+    #   langchain-core
+    #   langsmith
+    #   opentelemetry-api
+    #   pydantic
+    #   pydantic-core
+    #   pydantic-settings
+    #   sqlalchemy
+    #   starlette
+    #   typing-inspection
+typing-inspection==0.4.4
+    # via
+    #   fastapi
+    #   pydantic
+    #   pydantic-settings
+urllib3==2.8.0
+    # via requests
+uuid-utils==0.19.0
+    # via
+    #   langchain-core
+    #   langsmith
+uvicorn==0.54.0
+    # via healteam (pyproject.toml)
+uvloop==0.23.0 ; platform_python_implementation != 'PyPy' and sys_platform != 'cygwin' and sys_platform != 'win32'
+    # via uvicorn
+watchfiles==1.3.0
+    # via uvicorn
+websockets==17.4
+    # via
+    #   langsmith
+    #   uvicorn
+xxhash==4.0.2
+    # via
+    #   langgraph
+    #   langsmith
+zstandard==0.25.0
+    # via langsmith

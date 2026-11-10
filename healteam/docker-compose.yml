@@ -1,53 +1,42 @@
-# HealTeam — Docker Compose (W1)
-#
-# One-command bring-up:
-#   docker compose up
-#
-# Services:
-#   postgres  — Postgres 16 + pgvector
-#   api       — FastAPI backend
-#   web       — Next.js frontend
-
+# Docker Compose >=2.24. Default: local API + web, without a database dependency.
+# Existing healteam_data records are not moved automatically. Back up and
+# restore them into healteam_records before changing an existing deployment.
 services:
-  postgres:
-    image: pgvector/pgvector:pg16
-    container_name: healteam-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-healteam}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-healteam}
-      POSTGRES_DB: ${POSTGRES_DB:-healteam}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - healteam_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-healteam} -d ${POSTGRES_DB:-healteam}"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: healteam-api
     restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-healteam}:${POSTGRES_PASSWORD:-healteam}@postgres:5432/${POSTGRES_DB:-healteam}
+      HEALTEAM_ROOT: /opt/healteam
+      HEALTEAM_DATABASE_URL: sqlite+aiosqlite:////var/lib/healteam/healteam.sqlite3
+      HEALTEAM_MODEL_MODE: ${HEALTEAM_MODEL_MODE:-mock}
+      HEALTEAM_LLM_PROVIDER: ${HEALTEAM_LLM_PROVIDER:-anthropic}
+      HEALTEAM_LLM_API_KEY: ${HEALTEAM_LLM_API_KEY:-}
+      HEALTEAM_LLM_BASE_URL: ${HEALTEAM_LLM_BASE_URL:-}
+      HEALTEAM_LLM_MODEL: ${HEALTEAM_LLM_MODEL:-}
+      HEALTEAM_LLM_TEMPERATURE: ${HEALTEAM_LLM_TEMPERATURE:-${LLM_TEMPERATURE:-0.7}}
+      HEALTEAM_LLM_MAX_TOKENS: ${HEALTEAM_LLM_MAX_TOKENS:-${LLM_MAX_TOKENS:-1024}}
+      HEALTEAM_LLM_TIMEOUT_SECONDS: ${HEALTEAM_LLM_TIMEOUT_SECONDS:-${LLM_TIMEOUT_SECONDS:-60}}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_AUTH_TOKEN: ${ANTHROPIC_AUTH_TOKEN:-}
+      ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
-      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
-      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.7}
-      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-512}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      LLM_MODEL: ${LLM_MODEL:-}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
-    depends_on:
-      postgres:
-        condition: service_healthy
     ports:
-      - "${API_PORT:-8000}:8000"
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    volumes:
+      # Keep writable records separate from versioned cases/schools/rubrics.
+      - healteam_records:/var/lib/healteam
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2).status == 200 else 1)"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=2)"]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -56,21 +45,36 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: healteam-web
+      args:
+        HEALTEAM_API_INTERNAL_URL: http://api:8000
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      HEALTEAM_API_INTERNAL_URL: http://api:8000
     depends_on:
       api:
         condition: service_healthy
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
       interval: 10s
       timeout: 5s
       retries: 6
 
+  # Explicit opt-in for a later multi-user migration; S1 uses local SQLite.
+  postgres:
+    profiles: ["postgres"]
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-healteam}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-healteam}
+      POSTGRES_DB: ${POSTGRES_DB:-healteam}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - healteam_pgdata:/var/lib/postgresql/data
+
 volumes:
+  healteam_records:
   healteam_pgdata:
-    name: healteam_pgdata

@@ -1,0 +1,59 @@
+[project]
+name = "healteam"
+version = "0.6.0"
+description = "Family therapy AI practice system"
+requires-python = ">=3.11,<3.13"
+license = "MIT"
+readme = "README.md"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+    "pydantic>=2.10,<3",
+    "pydantic-settings>=2.6,<3",
+    "python-dotenv>=1.0,<2",
+    "python-multipart>=0.0.18,<1",
+    "httpx>=0.28,<0.29",
+    "anthropic>=0.40,<1",
+    "langgraph>=0.2,<1",
+    "langchain-core>=0.3,<1",
+    "sqlalchemy[asyncio]>=2.0.38,<2.1",
+    "aiosqlite>=0.21,<1",
+]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.50,<2"]
+dev = [
+    "pytest>=8,<9",
+    "pytest-asyncio>=0.23,<1",
+    "ruff>=0.4,<1",
+    "mypy>=1.10,<2",
+    "build>=1.2,<2",
+]
+
+# Every source path stays inside this distribution's root. This supports both
+# editable development and a standard wheel without moving the existing code.
+[tool.setuptools]
+packages = ["app", "app.routers", "app.services", "healteam_memory", "healteam_agents"]
+py-modules = ["repo_bootstrap"]
+
+[tool.setuptools.package-dir]
+"" = "."
+app = "apps/api/app"
+healteam_memory = "packages/memory"
+healteam_agents = "packages/agents"
+
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "ASYNC"]
+ignore = ["E501"]

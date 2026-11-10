@@ -8,22 +8,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import os
-import sys
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
-
-from repo_bootstrap import bootstrap_local_packages
-
-bootstrap_local_packages(REPO_ROOT, strict=False)
-
-import anthropic
-from healteam_memory import Actor, School, Session
 from healteam_agents import (
     DoctorAgent,
     FatherAgent,
@@ -32,11 +19,17 @@ from healteam_agents import (
     Orchestrator,
     PatientAgent,
     PsychiatristAgent,
+    SupervisionOrchestrator,
     build_case_context,
     generate_report,
-    SupervisionOrchestrator,
 )
 from healteam_agents.base import BaseAgent, Hint, SessionContext
+from healteam_memory import Actor, School, Session
+
+from ..resources import load_validated_case, project_root, validate_supporting_resources
+from ..settings import Settings, load_settings
+from .llm import AnthropicLLMClient as AnthropicLLMClient
+from .llm import HTTPModelClient, build_llm_client
 
 logger = logging.getLogger("healteam.session_runner")
 
@@ -45,84 +38,21 @@ logger = logging.getLogger("healteam.session_runner")
 # LLM Client
 # ---------------------------------------------------------------------------
 
-class AnthropicLLMClient:
-    """Real LLM client using anthropic SDK."""
 
-    def __init__(
-        self,
-        *,
-        model: str = "mimo-v2.5-pro",
-        base_url: str | None = None,
-        api_key: str,
-    ):
-        self.client = anthropic.AsyncAnthropic(
-            base_url=base_url,
-            api_key=api_key,
-        )
-        self.model = model
-
-    async def chat(
-        self,
-        *,
-        system: str,
-        messages: list[dict[str, str]],
-        model: str | None = None,
-        temperature: float = 0.7,
-        max_tokens: int = 1024,
-        **kwargs,
-    ) -> str:
-        resp = await self.client.messages.create(
-            model=model or self.model,
-            system=system,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max(max_tokens, 1024),
-        )
-        for block in resp.content:
-            if hasattr(block, "text") and block.type == "text":
-                return block.text
-        return "..."
+def load_session_llm_settings() -> Settings:
+    """Compatibility entry point backed by the shared explicit settings."""
+    return load_settings()
 
 
-@dataclass(frozen=True)
-class SessionLLMSettings:
-    """Runtime config for the live session LLM."""
-
-    auth_token: str | None
-    base_url: str | None
-    model: str
-
-
-def load_session_llm_settings() -> SessionLLMSettings:
-    """Load runtime LLM settings without embedding secrets in source."""
-
-    return SessionLLMSettings(
-        auth_token=os.getenv("ANTHROPIC_AUTH_TOKEN"),
-        base_url=os.getenv("ANTHROPIC_BASE_URL"),
-        model=os.getenv("ANTHROPIC_MODEL", os.getenv("LLM_MODEL", "mimo-v2.5-pro")),
-    )
-
-
-def build_session_llm_client() -> AnthropicLLMClient | None:
-    """Build the live LLM client when credentials are present."""
-
-    settings = load_session_llm_settings()
-    if not settings.auth_token:
-        logger.warning(
-            "ANTHROPIC_AUTH_TOKEN is not configured; falling back to placeholder agent replies"
-        )
-        return None
-
-    return AnthropicLLMClient(
-        model=settings.model,
-        base_url=settings.base_url,
-        api_key=settings.auth_token,
-    )
+def build_session_llm_client() -> HTTPModelClient | None:
+    """Only explicit mock mode returns placeholder agents."""
+    return build_llm_client(load_settings())
 
 
 # ---------------------------------------------------------------------------
 # Event emitter wrapper
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class EventEmitter:
@@ -154,12 +84,10 @@ class EventEmitter:
                     "actor": actor.value,
                     "content": text,
                 }
-                asyncio.run_coroutine_threadsafe(
-                    emitter.queue.put(event_data), emitter.loop
-                )
+                asyncio.run_coroutine_threadsafe(emitter.queue.put(event_data), emitter.loop)
                 return text
 
-            def observe(self, context: SessionContext) -> Optional[Hint]:
+            def observe(self, context: SessionContext) -> Hint | None:
                 hint = agent.observe(context)
                 if hint is not None:
                     event_data = {
@@ -169,9 +97,7 @@ class EventEmitter:
                         "content": hint.content,
                         "confidence": hint.confidence,
                     }
-                    asyncio.run_coroutine_threadsafe(
-                        emitter.queue.put(event_data), emitter.loop
-                    )
+                    asyncio.run_coroutine_threadsafe(emitter.queue.put(event_data), emitter.loop)
                 return hint
 
         return WrappedAgent()  # type: ignore[return-value]
@@ -180,6 +106,7 @@ class EventEmitter:
 # ---------------------------------------------------------------------------
 # Session runner
 # ---------------------------------------------------------------------------
+
 
 async def run_session(
     case_id: str,
@@ -191,11 +118,13 @@ async def run_session(
 
     Returns a dict with session results (for the 'complete' event).
     """
+    settings = load_settings()
+    load_validated_case(case_id)
+    validate_supporting_resources(school_str)
     llm = build_session_llm_client()
 
     # Map school string to enum.
-    school_map = {"structural": School.STRUCTURAL, "bowen": School.BOWEN, "satir": School.SATIR}
-    school = school_map.get(school_str, School.STRUCTURAL)
+    school = School(school_str)
 
     # Create event emitter and wrap agents.
     loop = asyncio.get_running_loop()
@@ -222,26 +151,46 @@ async def run_session(
     session = Session(case_id=case_id, school=school)
 
     # Emit start event.
-    await queue.put({"type": "start", "case_id": case_id, "school": school_str, "max_rounds": max_rounds})
+    await queue.put(
+        {
+            "type": "start",
+            "case_id": case_id,
+            "school": school_str,
+            "max_rounds": max_rounds,
+            "mode": "demo",
+            "model_mode": settings.model_mode,
+        }
+    )
 
     # Run orchestrator in thread (it's synchronous).
     def _run():
         return orchestrator.run(session)
 
     final = await loop.run_in_executor(None, _run)
+    if llm is not None and getattr(llm, "failure", None):
+        await queue.put(
+            {
+                "type": "error",
+                "code": "llm_failed",
+                "message": "Model generation failed; no report was produced",
+            }
+        )
+        return {}
 
     # Emit round summary.
     actor_counts: dict[str, int] = {}
     for evt in final.events:
         actor_counts[evt.actor.value] = actor_counts.get(evt.actor.value, 0) + 1
 
-    await queue.put({
-        "type": "session_end",
-        "rounds": final.round,
-        "total_events": len(final.events),
-        "status": final.status.value,
-        "actor_counts": actor_counts,
-    })
+    await queue.put(
+        {
+            "type": "session_end",
+            "rounds": final.round,
+            "total_events": len(final.events),
+            "status": final.status.value,
+            "actor_counts": actor_counts,
+        }
+    )
 
     # Load case context once for supervision/report generation.
     case_context = build_case_context(case_id, school)
@@ -256,16 +205,27 @@ async def run_session(
                 psychiatrist=raw_agents[Actor.PSYCHIATRIST],
             )
             supervision_result = await supervision.run(final, case_context)
+            if getattr(llm, "failure", None):
+                await queue.put(
+                    {
+                        "type": "error",
+                        "code": "llm_failed",
+                        "message": "Model supervision failed; no report was produced",
+                    }
+                )
+                return {}
 
-            await queue.put({
-                "type": "supervision",
-                "doctor_reflection": supervision_result.get("doctor_reflection", ""),
-                "observer_report": supervision_result.get("observer_report", ""),
-                "psychiatrist_analysis": supervision_result.get("psychiatrist_analysis", ""),
-                "consensus": supervision_result.get("consensus", ""),
-            })
+            await queue.put(
+                {
+                    "type": "supervision",
+                    "doctor_reflection": supervision_result.get("doctor_reflection", ""),
+                    "observer_report": supervision_result.get("observer_report", ""),
+                    "psychiatrist_analysis": supervision_result.get("psychiatrist_analysis", ""),
+                    "consensus": supervision_result.get("consensus", ""),
+                }
+            )
         else:
-            logger.info("Skipping supervision because no live Anthropic credentials are configured")
+            logger.info("Skipping model supervision in explicit mock demo mode")
 
         # Generate report.
         report = generate_report(
@@ -273,21 +233,27 @@ async def run_session(
             case_context=case_context,
             supervision_result=supervision_result,
         )
+        if settings.model_mode == "mock":
+            report = "# 离线流程演示报告 / 固定占位回复，仅验证流程，不代表训练评价\n\n" + report
 
         # Save report.
-        report_path = REPO_ROOT / "data" / "reports" / f"{final.id[:8]}.md"
+        report_path = project_root() / "data" / "reports" / f"{final.id}.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(report, encoding="utf-8")
 
-        await queue.put({
-            "type": "report",
-            "content": report,
-            "path": str(report_path),
-        })
+        await queue.put(
+            {
+                "type": "report",
+                "content": report,
+                "session_id": final.id,
+                "model_mode": settings.model_mode,
+            }
+        )
 
-    except Exception as e:
-        logger.exception("Supervision/report failed")
-        await queue.put({"type": "error", "message": str(e)})
+    except Exception:
+        logger.error("Supervision/report failed")
+        await queue.put({"type": "error", "code": "report_failed", "message": "Report generation failed"})
+        return {}
 
     # Signal completion.
     await queue.put({"type": "complete"})

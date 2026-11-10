@@ -23,6 +23,7 @@ from healteam_memory import (
     EventType,
     Session,
 )
+from healteam_memory.resources import find_project_root
 
 
 # ---------------------------------------------------------------------------
@@ -182,7 +183,7 @@ def resolve_prompt_path(path: str) -> Path:
     p = Path(path)
     if p.is_absolute():
         return p
-    return (DEFAULT_PROMPTS_DIR / p).resolve()
+    return (find_project_root() / "packages" / "prompts" / p).resolve()
 
 
 def load_system_prompt(path: str) -> str:
@@ -204,6 +205,16 @@ def make_placeholder_utterance(actor: Actor, ctx: SessionContext) -> str:
     return f"[{actor.value} placeholder | round={rnd}]"
 
 
+def room_events(session: Session) -> list[Event]:
+    """Public room dialogue only; private hints and internal events stay out.
+
+    Filter before truncating history so a burst of internal events cannot
+    displace the last public utterances from a family's model input.
+    """
+    room_actors = {Actor.DOCTOR, Actor.TRAINEE, Actor.FATHER, Actor.MOTHER, Actor.PATIENT}
+    return [event for event in session.events if event.type == EventType.UTTERANCE and event.actor in room_actors]
+
+
 # ---------------------------------------------------------------------------
 # Public surface
 # ---------------------------------------------------------------------------
@@ -218,4 +229,5 @@ __all__ = [
     "resolve_prompt_path",
     "load_system_prompt",
     "make_placeholder_utterance",
+    "room_events",
 ]

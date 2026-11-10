@@ -18,6 +18,7 @@ from .base import (
     SessionContext,
     load_system_prompt,
     make_placeholder_utterance,
+    room_events,
 )
 
 
@@ -167,7 +168,7 @@ class DoctorAgent:
         parts.append(f"当前回合: {context.session.round}")
 
         # Recent events (last 10).
-        recent = context.session.events[-10:] if context.session.events else []
+        recent = room_events(context.session)[-10:]
         if recent:
             parts.append("\n## 最近对话")
             for evt in recent:

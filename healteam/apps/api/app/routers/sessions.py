@@ -5,13 +5,16 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
+from typing import Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
+from ..resources import CASE_ID_PATTERN, CaseResourceError, load_validated_case, validate_supporting_resources
 from ..services.session_runner import run_session
+from ..settings import ConfigurationError, load_settings
 
 router = APIRouter()
 logger = logging.getLogger("healteam.api.sessions")
@@ -21,13 +24,15 @@ _session_history: list[dict[str, object]] = []
 
 
 class SessionCreate(BaseModel):
-    case_id: str = "teen-truancy-01"
-    school: str = "structural"
-    max_rounds: int = 10
+    model_config = ConfigDict(extra="forbid")
+    case_id: str = Field(default="teen-truancy-01", pattern=CASE_ID_PATTERN, max_length=128)
+    school: Literal["structural", "bowen", "satir"] = "structural"
+    max_rounds: int = Field(default=10, ge=1, le=30, strict=True)
+    mode: Literal["demo"] = "demo"
 
 
 @router.post("", summary="Create and run a therapy session (SSE stream)")
-async def create_session(req: SessionCreate):
+async def create_session(req: SessionCreate, request: Request):
     """Create a new therapy session and stream events via SSE.
 
     Returns a Server-Sent Events stream with event types:
@@ -41,6 +46,17 @@ async def create_session(req: SessionCreate):
     - complete: all done
     - error: error occurred
     """
+    if not getattr(request.app.state, "allow_legacy_demo", False):
+        raise HTTPException(status_code=410, detail={"code": "legacy_demo_replaced"})
+    try:
+        load_validated_case(req.case_id)
+        validate_supporting_resources(req.school)
+    except CaseResourceError as exc:
+        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code}) from None
+    try:
+        load_settings()
+    except ConfigurationError as exc:
+        raise HTTPException(status_code=503, detail={"code": str(exc)}) from None
     queue: asyncio.Queue = asyncio.Queue()
 
     async def event_stream() -> AsyncGenerator[str, None]:
@@ -54,6 +70,7 @@ async def create_session(req: SessionCreate):
             )
         )
         result: dict[str, object] = {}
+        queue_task: asyncio.Task | None = None
 
         try:
             while True:
@@ -77,9 +94,9 @@ async def create_session(req: SessionCreate):
                 else:
                     try:
                         outcome = task.result()
-                    except Exception as e:
-                        logger.exception("Session runner crashed")
-                        yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+                    except Exception:
+                        logger.error("Session runner crashed")
+                        yield f"event: error\ndata: {json.dumps({'code': 'session_failed', 'message': 'Session failed'})}\n\n"
                         break
 
                     if isinstance(outcome, dict):
@@ -103,25 +120,30 @@ async def create_session(req: SessionCreate):
         except asyncio.CancelledError:
             logger.info("SSE client disconnected before session completion")
             raise
-        except Exception as e:
-            logger.exception("SSE stream error")
-            yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+        except Exception:
+            logger.error("SSE stream error")
+            yield f"event: error\ndata: {json.dumps({'code': 'stream_failed', 'message': 'Session stream failed'})}\n\n"
         finally:
+            if queue_task is not None and not queue_task.done():
+                queue_task.cancel()
+                await asyncio.gather(queue_task, return_exceptions=True)
             if not task.done():
                 task.cancel()
             outcome = (await asyncio.gather(task, return_exceptions=True))[0]
             if isinstance(outcome, dict):
                 result = outcome
             elif isinstance(outcome, Exception) and not isinstance(outcome, asyncio.CancelledError):
-                logger.error("Session runner failed: %s", outcome)
+                logger.error("Session runner failed (%s)", type(outcome).__name__)
 
             if result:
-                _session_history.append({
-                    "case_id": req.case_id,
-                    "school": req.school,
-                    "max_rounds": req.max_rounds,
-                    **result,
-                })
+                _session_history.append(
+                    {
+                        "case_id": req.case_id,
+                        "school": req.school,
+                        "max_rounds": req.max_rounds,
+                        **result,
+                    }
+                )
 
     return StreamingResponse(
         event_stream(),

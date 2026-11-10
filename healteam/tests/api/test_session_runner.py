@@ -34,6 +34,8 @@ def test_build_session_llm_client_returns_none_without_token(monkeypatch) -> Non
 
 
 def test_build_session_llm_client_uses_env_settings(monkeypatch) -> None:
+    monkeypatch.setenv("HEALTEAM_MODEL_MODE", "live")
+    monkeypatch.setenv("HEALTEAM_LLM_PROVIDER", "anthropic")
     monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "test-token")
     monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://example.com/anthropic")
     monkeypatch.setenv("ANTHROPIC_MODEL", "claude-test")

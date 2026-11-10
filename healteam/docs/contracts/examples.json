@@ -1,0 +1,46 @@
+{
+  "contract_version": "0.5.0",
+  "implementation_stage": "S4: trial evaluation and append-only human review",
+  "examples": {
+    "create_session": {
+      "client_request_id": "00000000-0000-4000-8000-000000000002",
+      "case_id": "teen-truancy-01",
+      "school": "satir",
+      "mode": "training",
+      "max_rounds": 10
+    },
+    "submit_message": {
+      "client_message_id": "00000000-0000-4000-8000-000000000003",
+      "expected_turn": 1,
+      "content": "我想先听听每个人对这次见面的想法。"
+    },
+    "session_snapshot": {
+      "session_id": "00000000-0000-4000-8000-000000000001",
+      "case_id": "teen-truancy-01",
+      "case_version": "1.0.0",
+      "school": "satir",
+      "mode": "training",
+      "model_mode": "mock",
+      "state": "awaiting_input",
+      "phase": "simulation",
+      "max_rounds": 10,
+      "current_round": 0,
+      "last_event_seq": 0,
+      "report_state": "not_started"
+    },
+    "utterance": {
+      "event_id": "00000000-0000-4000-8000-000000000004",
+      "session_id": "00000000-0000-4000-8000-000000000001",
+      "seq": 1,
+      "round": 1,
+      "type": "utterance",
+      "actor": "trainee",
+      "source": "human",
+      "visibility": "public",
+      "timestamp": "2026-11-04T00:00:00Z",
+      "payload": {
+        "content": "我想先听听每个人对这次见面的想法。"
+      }
+    }
+  }
+}
